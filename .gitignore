@@ -1,0 +1,72 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local configuration
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Caches / generated IDE files
+.cxx/
+.externalNativeBuild/
+captures/
+.navigation/
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/deploymentTargetDropDown.xml
+.idea/shelf/
+.idea/tasks.xml
+
+# Kotlin
+.kotlin/
+
+# KSP / kapt / generated
+.generated/
+**/generated/
+ksp/
+**/ksp/
+out/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Keystore / signing
+*.jks
+*.keystore
+keystore.properties
+
+# Firebase / Google Services optional secrets
+google-services.json
+secrets.properties
+
+# NDK / native debug
+obj/
+
+# Fastlane (optional)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# Mac / temp
+*.swp
+*.swo
+*~
+
+# Compose compiler reports / metrics if you enable them
+compose_metrics/
+compose_reports/
