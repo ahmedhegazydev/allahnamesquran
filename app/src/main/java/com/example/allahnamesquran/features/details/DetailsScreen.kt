@@ -55,12 +55,6 @@ fun DetailsScreen(
         }
 
         item {
-//            Text(
-//                text = "الآيات التي ورد فيها الاسم",
-//                color = MaterialTheme.colorScheme.onBackground,
-//                fontSize = TextUnit.Unspecified,
-//                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-//            )
             Text(
                 text = "الآيات التي ورد فيها الاسم",
                 color = MaterialTheme.colorScheme.onBackground,

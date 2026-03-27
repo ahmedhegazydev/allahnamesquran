@@ -2,14 +2,15 @@ package com.example.allahnamesquran.features.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import com.example.allahnamesquran.data.repository.QuranRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SplashViewModel : ViewModel() {
+class SplashViewModel(
+    private val repository: QuranRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(SplashUiState())
     val state: StateFlow<SplashUiState> = _state.asStateFlow()
@@ -24,9 +25,20 @@ class SplashViewModel : ViewModel() {
         if (_state.value.destination != null) return
 
         viewModelScope.launch {
-            delay(1200)
-            _state.update {
-                it.copy(
+            try {
+                repository.syncQuranIfNeeded()
+                val onboardingSeen = repository.isOnboardingSeen()
+
+                _state.value = SplashUiState(
+                    isLoading = false,
+                    destination = if (onboardingSeen) {
+                        SplashDestination.HOME
+                    } else {
+                        SplashDestination.ONBOARDING
+                    }
+                )
+            } catch (e: Exception) {
+                _state.value = SplashUiState(
                     isLoading = false,
                     destination = SplashDestination.ONBOARDING
                 )

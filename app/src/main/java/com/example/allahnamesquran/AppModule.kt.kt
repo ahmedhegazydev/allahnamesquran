@@ -1,0 +1,45 @@
+package com.example.allahnamesquran
+
+import androidx.room.Room
+import com.example.allahnamesquran.data.local.AppDatabase
+import com.example.allahnamesquran.data.preferences.AppPreferences
+import com.example.allahnamesquran.data.remote.NetworkModule
+import com.example.allahnamesquran.data.repository.QuranRepository
+import com.example.allahnamesquran.data.repository.QuranRepositoryImpl
+import com.example.allahnamesquran.feature.details.DetailsViewModel
+import com.example.allahnamesquran.feature.home.HomeViewModel
+import com.example.allahnamesquran.feature.onboarding.OnboardingViewModel
+import com.example.allahnamesquran.features.splash.SplashViewModel
+import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+val appModule = module {
+
+    single { NetworkModule.provideQuranApiService() }
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "allah_names_quran.db"
+        ).build()
+    }
+
+    single { get<AppDatabase>().ayahDao() }
+
+    single { AppPreferences(androidContext()) }
+
+    single<QuranRepository> {
+        QuranRepositoryImpl(
+            apiService = get(),
+            ayahDao = get(),
+            appPreferences = get()
+        )
+    }
+
+    viewModel { SplashViewModel(repository = get()) }
+    viewModel { OnboardingViewModel() }
+    viewModel { HomeViewModel() }
+    viewModel { DetailsViewModel() }
+}
