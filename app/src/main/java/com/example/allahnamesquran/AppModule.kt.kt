@@ -11,7 +11,7 @@ import com.example.allahnamesquran.features.home.HomeViewModel
 import com.example.allahnamesquran.features.onboarding.OnboardingViewModel
 import com.example.allahnamesquran.features.splash.SplashViewModel
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
@@ -38,8 +38,8 @@ val appModule = module {
         )
     }
 
-    viewModel { SplashViewModel(repository = get()) }
-    viewModel { OnboardingViewModel() }
-    viewModel { HomeViewModel() }
-    viewModel { DetailsViewModel() }
+    viewModelOf(::SplashViewModel)
+    viewModelOf(::OnboardingViewModel)
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::DetailsViewModel)
 }

@@ -1,36 +1,49 @@
 package com.example.allahnamesquran.data.remote.dto
 
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class QuranPageResponseDto(
+    @SerializedName("code")
     val code: Int,
+    @SerializedName("status")
     val status: String,
+    @SerializedName("data")
     val data: QuranPageDataDto
 )
 
-@Serializable
 data class QuranPageDataDto(
+    @SerializedName("number")
     val number: Int,
+    @SerializedName("ayahs")
     val ayahs: List<AyahDto>
 )
 
-@Serializable
 data class AyahDto(
+    @SerializedName("number")
     val number: String,
+    @SerializedName("text")
     val text: String,
+    @SerializedName("surah")
     val surah: SurahDto,
+    @SerializedName("numberInSurah")
     val numberInSurah: String,
+    @SerializedName("juz")
     val juz: String,
+    @SerializedName("page")
     val page: String,
+    @SerializedName("hizbQuarter")
     val hizbQuarter: String,
-    val sajda: String
+    @SerializedName("sajda")
+    val sajda: Any? // Changed to Any? as sajda can be boolean or object/string in some APIs
 )
 
-@Serializable
 data class SurahDto(
+    @SerializedName("number")
     val number: String,
+    @SerializedName("name")
     val name: String,
+    @SerializedName("englishName")
     val englishName: String,
+    @SerializedName("revelationType")
     val revelationType: String
 )
