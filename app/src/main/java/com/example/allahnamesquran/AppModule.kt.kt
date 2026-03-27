@@ -6,9 +6,9 @@ import com.example.allahnamesquran.data.preferences.AppPreferences
 import com.example.allahnamesquran.data.remote.NetworkModule
 import com.example.allahnamesquran.data.repository.QuranRepository
 import com.example.allahnamesquran.data.repository.QuranRepositoryImpl
-import com.example.allahnamesquran.feature.details.DetailsViewModel
-import com.example.allahnamesquran.feature.home.HomeViewModel
-import com.example.allahnamesquran.feature.onboarding.OnboardingViewModel
+import com.example.allahnamesquran.features.details.DetailsViewModel
+import com.example.allahnamesquran.features.home.HomeViewModel
+import com.example.allahnamesquran.features.onboarding.OnboardingViewModel
 import com.example.allahnamesquran.features.splash.SplashViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
