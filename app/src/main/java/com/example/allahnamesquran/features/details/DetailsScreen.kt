@@ -77,7 +77,7 @@ private fun DetailsScreenContent(
                 description = state.description,
                 isFavorite = state.isFavorite,
                 onBackClick = onBackClick,
-                onShareClick = { DetailsShareHelper.shareAsImage(context, state) },
+                onShareClick = { DetailsShareHelper.shareText(context, state) },
                 onFavoriteClick = onFavoriteClick
             )
         }
