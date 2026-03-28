@@ -1,5 +1,6 @@
 package com.example.allahnamesquran.features.onboarding
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +31,24 @@ import com.example.allahnamesquran.R
 fun OnboardingScreen(
     onStartClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
+    DisposableEffect(context) {
+        val mediaPlayer = MediaPlayer.create(context, R.raw.nrqhez49tgu)?.apply {
+            isLooping = true
+            start()
+        }
+
+        onDispose {
+            mediaPlayer?.run {
+                if (isPlaying) {
+                    stop()
+                }
+                release()
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
