@@ -26,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
+import android.content.pm.ApplicationInfo
 import com.example.allahnamesquran.core.ui.theme.SurfaceWhite
 import com.example.allahnamesquran.R
 import com.example.allahnamesquran.core.ui.preview.PreviewDetailsUiState
@@ -62,6 +63,7 @@ private fun DetailsScreenContent(
     onFavoriteClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val isDebuggable = (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
     LazyColumn(
         modifier = Modifier
@@ -78,7 +80,12 @@ private fun DetailsScreenContent(
                 isFavorite = state.isFavorite,
                 onBackClick = onBackClick,
                 onShareClick = { DetailsShareHelper.shareText(context, state) },
-                onFavoriteClick = onFavoriteClick
+                onFavoriteClick = onFavoriteClick,
+                onForceCrashClick = if (isDebuggable) {
+                    { throw RuntimeException("Test Crashlytics crash") }
+                } else {
+                    null
+                }
             )
         }
 

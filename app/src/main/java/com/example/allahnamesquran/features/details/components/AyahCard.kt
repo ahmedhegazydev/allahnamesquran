@@ -34,7 +34,14 @@ import com.example.allahnamesquran.features.details.AyahUiModel
 fun AyahCard(
     item: AyahUiModel
 ) {
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        val referenceLines = stringResource(
+            R.string.ayah_reference_with_details,
+            item.surahName,
+            item.ayahNumber,
+            item.page,
+            item.juz
+        ).split('\n', limit = 2)
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -42,50 +49,56 @@ fun AyahCard(
                 .padding(horizontal = 18.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            Row(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.background,
-                    tonalElevation = 0.dp,
-                    shadowElevation = 0.dp
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = MaterialTheme.colorScheme.background,
+                        tonalElevation = 0.dp,
+                        shadowElevation = 0.dp
+                    ) {
+                        Text(
+                            text = item.ayahNumber.toString(),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = QuranFontFamily,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                        )
+                    }
+
                     Text(
-                        text = item.ayahNumber.toString(),
+                        text = item.surahName,
                         color = MaterialTheme.colorScheme.primary,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = QuranFontFamily,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = QuranFontFamily
                     )
+
+                    Spacer(modifier = Modifier.weight(1f))
                 }
 
-                Text(
-                    text = item.surahName,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = QuranFontFamily
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = stringResource(
-                        R.string.ayah_reference_with_details,
-                        item.surahName,
-                        item.ayahNumber,
-                        item.page,
-                        item.juz
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.62f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.End
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    referenceLines.forEach { line ->
+                        Text(
+                            text = line,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.62f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.End
+                        )
+                    }
+                }
             }
 
             Text(
@@ -95,12 +108,11 @@ fun AyahCard(
                 lineHeight = 52.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = QuranFontFamily,
-                textAlign = TextAlign.End,
+                textAlign = TextAlign.Start,
                 modifier = Modifier.fillMaxWidth()
             )
 
         }
-    }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
