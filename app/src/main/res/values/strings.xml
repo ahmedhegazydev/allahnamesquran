@@ -15,5 +15,11 @@
     <string name="ayah_reference">%1$s • Verse %2$d</string>
     <string name="onboarding_title">Welcome</string>
     <string name="onboarding_description">Choose one of Allah’s beautiful names to explore the verses where it appears in the Holy Quran</string>
-    <string name="onboarding_start">Get Started</string>
+    <string name="onboarding_feature_names_title">99 names of Allah</string>
+    <string name="onboarding_feature_names_subtitle">Browse all beautiful names with ease</string>
+    <string name="onboarding_feature_search_title">Fast and accurate search</string>
+    <string name="onboarding_feature_search_subtitle">Search for any name quickly and smoothly</string>
+    <string name="onboarding_feature_favorites_title">Save favorites</string>
+    <string name="onboarding_feature_favorites_subtitle">Keep your preferred names close for quick access</string>
+    <string name="onboarding_start">Get Started Now</string>
 </resources>
