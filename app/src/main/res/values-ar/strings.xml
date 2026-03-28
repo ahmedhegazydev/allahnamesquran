@@ -21,5 +21,5 @@
     <string name="onboarding_feature_search_subtitle">ابحث عن أي اسم بسهولة وسرعة</string>
     <string name="onboarding_feature_favorites_title">احفظ المفضلة</string>
     <string name="onboarding_feature_favorites_subtitle">احتفظ بالأسماء المفضلة لديك للوصول السريع</string>
-    <string name="onboarding_start">ابدأ الآن - التصميم الأساسي</string>
+    <string name="onboarding_start">ابدأ الآن</string>
 </resources>

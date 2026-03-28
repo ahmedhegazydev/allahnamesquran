@@ -1,6 +1,7 @@
 package com.example.allahnamesquran.features.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
+import com.example.allahnamesquran.core.ui.components.AsmaTabRow
 import com.example.allahnamesquran.features.home.components.EmptyNamesState
 import com.example.allahnamesquran.features.home.components.HomeHeader
 import com.example.allahnamesquran.features.home.components.NameCard
@@ -55,8 +57,13 @@ fun HomeScreen(
             selectedTab = state.selectedTab,
             allCount = if (state.isLoading) 0 else state.names.size,
             favoriteCount = state.names.count { it.isFavorite },
-            onSearchChanged = { viewModel.onIntent(HomeIntent.SearchChanged(it)) },
-            onTabSelected = { viewModel.onIntent(HomeIntent.TabSelected(it)) }
+            onSearchChanged = { viewModel.onIntent(HomeIntent.SearchChanged(it)) }
+        )
+
+        AsmaTabRow(
+            selectedTab = state.selectedTab,
+            onTabSelected = { viewModel.onIntent(HomeIntent.TabSelected(it)) },
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
         )
 
         if (state.isLoading) {
@@ -68,7 +75,7 @@ fun HomeScreen(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -122,7 +129,8 @@ private fun HomeNameCardSkeleton(shimmerAlpha: Float) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(20.dp))
+            .background(Color.White, RoundedCornerShape(22.dp))
+            .border(1.dp, Color(0xFFE9E3D8), RoundedCornerShape(22.dp))
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
