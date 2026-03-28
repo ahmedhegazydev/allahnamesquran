@@ -96,6 +96,16 @@ fun AppNavHostPreview() {
                     override suspend fun setOnboardingSeen() {}
                     override fun getAllAllahNames(): List<AllahName> = emptyList()
                     override fun getAllahNameById(id: Int): AllahName? = null
+                    override suspend fun getFavoriteNameIds(): Set<Int> {
+                        return emptySet()
+                    }
+
+                    override suspend fun setFavoriteName(
+                        id: Int,
+                        isFavorite: Boolean
+                    ) {
+                    }
+
                     override suspend fun searchAyahsByAllahName(name: String): List<AyahSearchResult> = emptyList()
                 }
             }
