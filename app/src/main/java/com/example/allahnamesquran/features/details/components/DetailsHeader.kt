@@ -1,37 +1,41 @@
 package com.example.allahnamesquran.features.details.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.allahnamesquran.R
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 
 @Composable
 fun DetailsHeader(
     name: String,
+    englishName: String,
     description: String,
-    ayahsCount: Int,
     isFavorite: Boolean,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit
@@ -41,76 +45,121 @@ fun DetailsHeader(
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
+                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
             )
             .statusBarsPadding()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+            .padding(horizontal = 20.dp, vertical = 18.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.Rounded.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White
-                )
-            }
-
-            Text(
-                text = stringResource(R.string.details_title),
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = QuranFontFamily,
-                modifier = Modifier.weight(1f)
+            HeaderActionButton(
+                onClick = onBackClick,
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
             )
 
-            IconButton(onClick = onFavoriteClick) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
-                    contentDescription = null,
-                    tint = Color.White
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                HeaderActionButton(
+                    onClick = {},
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.Share,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+                )
+
+                HeaderActionButton(
+                    onClick = onFavoriteClick,
+                    icon = {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
                 )
             }
         }
 
-        Text(
-            text = name,
-            color = Color.White,
-            fontSize = 34.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = QuranFontFamily
-        )
+        Spacer(modifier = Modifier.height(6.dp))
 
-        if (description.isNotBlank()) {
-            Text(
-                text = description,
-                color = Color.White.copy(alpha = 0.92f),
-                fontSize = 18.sp,
-                lineHeight = 30.sp,
-                fontFamily = QuranFontFamily
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Color.White.copy(alpha = 0.16f),
-                    RoundedCornerShape(18.dp)
-                )
-                .padding(horizontal = 18.dp, vertical = 14.dp)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = stringResource(R.string.ayahs_count, ayahsCount),
+                text = name,
                 color = Color.White,
-                fontSize = 20.sp,
+                fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = QuranFontFamily
+                fontFamily = QuranFontFamily,
+                textAlign = TextAlign.Center
             )
+
+            Text(
+                text = englishName,
+                color = Color.White.copy(alpha = 0.88f),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+
+        if (description.isNotBlank()) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color.White,
+                shape = RoundedCornerShape(22.dp),
+                tonalElevation = 0.dp,
+                shadowElevation = 0.dp
+            ) {
+                Text(
+                    text = description,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 20.sp,
+                    lineHeight = 34.sp,
+                    fontFamily = QuranFontFamily,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 22.dp, vertical = 24.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun HeaderActionButton(
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(18.dp),
+        color = Color.White.copy(alpha = 0.12f),
+        contentColor = Color.White,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.12f)),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        modifier = Modifier.size(56.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            icon()
         }
     }
 }

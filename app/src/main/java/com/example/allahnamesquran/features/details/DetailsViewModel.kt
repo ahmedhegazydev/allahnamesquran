@@ -3,6 +3,7 @@ package com.example.allahnamesquran.features.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.allahnamesquran.data.repository.QuranRepository
+import com.example.allahnamesquran.data.static.AllahNamesTranslations
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,6 +33,7 @@ class DetailsViewModel(
             _state.value = DetailsUiState(
                 nameId = nameId,
                 name = name?.name.orEmpty(),
+                englishName = name?.let { AllahNamesTranslations.getEnglishName(it.id, it.name) }.orEmpty(),
                 description = name?.description.orEmpty(),
                 ayahs = ayahs.map {
                     AyahUiModel(

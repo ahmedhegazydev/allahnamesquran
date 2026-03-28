@@ -1,21 +1,30 @@
 package com.example.allahnamesquran.features.details
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import com.example.allahnamesquran.core.ui.theme.SurfaceWhite
 import com.example.allahnamesquran.R
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.details.components.AyahCard
@@ -39,13 +48,13 @@ fun DetailsScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .navigationBarsPadding(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         item {
             DetailsHeader(
                 name = state.name,
+                englishName = state.englishName,
                 description = state.description,
-                ayahsCount = state.ayahsCount,
                 isFavorite = state.isFavorite,
                 onBackClick = onBackClick,
                 onFavoriteClick = {
@@ -55,22 +64,55 @@ fun DetailsScreen(
         }
 
         item {
-            Text(
-                text = stringResource(R.string.ayahs_section_title),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.titleMedium,
-                fontFamily = QuranFontFamily,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.ayahs_section_title),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontFamily = QuranFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Surface(
+                    color = SurfaceWhite.copy(alpha = 0.92f),
+                    shape = RoundedCornerShape(20.dp),
+                    tonalElevation = 0.dp,
+                    shadowElevation = 0.dp
+                ) {
+                    Text(
+                        text = stringResource(R.string.ayahs_count, state.ayahsCount),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = QuranFontFamily,
+                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp)
+                    )
+                }
+            }
         }
 
         items(
             items = state.ayahs,
             key = { it.id }
         ) { ayah ->
-            AyahCard(
-                item = ayah
-            )
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(24.dp))
+            ) {
+                AyahCard(item = ayah)
+            }
+        }
+
+        item {
+            Box(modifier = Modifier.padding(bottom = 12.dp))
         }
     }
 }
