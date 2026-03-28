@@ -40,6 +40,8 @@ class DetailsViewModel(
                         id = it.id,
                         surahName = it.surahName,
                         ayahNumber = it.ayahNumber,
+                        page = it.page,
+                        juz = it.juz,
                         text = it.text
                     )
                 },

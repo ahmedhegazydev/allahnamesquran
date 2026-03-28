@@ -27,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 
 @Composable
@@ -38,6 +40,7 @@ fun DetailsHeader(
     description: String,
     isFavorite: Boolean,
     onBackClick: () -> Unit,
+    onShareClick: () -> Unit,
     onFavoriteClick: () -> Unit
 ) {
     Column(
@@ -71,7 +74,7 @@ fun DetailsHeader(
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 HeaderActionButton(
-                    onClick = {},
+                    onClick = onShareClick,
                     icon = {
                         Icon(
                             imageVector = Icons.Rounded.Share,
@@ -136,6 +139,38 @@ fun DetailsHeader(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@Composable
+private fun DetailsHeaderPreview() {
+    PreviewSurface {
+        DetailsHeader(
+            name = "اللَّهُ",
+            englishName = "ALLAH",
+            description = "هو الاسم الدال على الذات الإلهية الجامعة لجميع صفات الكمال، المنفرد بالألوهية والعبادة.",
+            isFavorite = true,
+            onBackClick = {},
+            onShareClick = {},
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@Composable
+private fun DetailsHeaderWithoutDescriptionPreview() {
+    PreviewSurface {
+        DetailsHeader(
+            name = "الرَّحْمٰنُ",
+            englishName = "AR-RAHMAN",
+            description = "",
+            isFavorite = false,
+            onBackClick = {},
+            onShareClick = {},
+            onFavoriteClick = {}
+        )
     }
 }
 

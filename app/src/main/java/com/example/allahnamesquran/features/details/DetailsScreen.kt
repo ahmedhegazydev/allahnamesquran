@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,11 +25,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.platform.LocalContext
 import com.example.allahnamesquran.core.ui.theme.SurfaceWhite
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.preview.PreviewDetailsUiState
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.details.components.AyahCard
 import com.example.allahnamesquran.features.details.components.DetailsHeader
+import com.example.allahnamesquran.features.details.share.DetailsShareHelper
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -42,6 +47,21 @@ fun DetailsScreen(
     LaunchedEffect(nameId) {
         viewModel.onIntent(DetailsIntent.LoadData(nameId))
     }
+
+    DetailsScreenContent(
+        state = state,
+        onBackClick = onBackClick,
+        onFavoriteClick = { viewModel.onIntent(DetailsIntent.ToggleFavorite) }
+    )
+}
+
+@Composable
+private fun DetailsScreenContent(
+    state: DetailsUiState,
+    onBackClick: () -> Unit,
+    onFavoriteClick: () -> Unit
+) {
+    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier
@@ -57,9 +77,8 @@ fun DetailsScreen(
                 description = state.description,
                 isFavorite = state.isFavorite,
                 onBackClick = onBackClick,
-                onFavoriteClick = {
-                    viewModel.onIntent(DetailsIntent.ToggleFavorite)
-                }
+                onShareClick = { DetailsShareHelper.shareAsImage(context, state) },
+                onFavoriteClick = onFavoriteClick
             )
         }
 
@@ -114,5 +133,17 @@ fun DetailsScreen(
         item {
             Box(modifier = Modifier.padding(bottom = 12.dp))
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@Composable
+private fun DetailsScreenPreview() {
+    PreviewSurface {
+        DetailsScreenContent(
+            state = PreviewDetailsUiState,
+            onBackClick = {},
+            onFavoriteClick = {}
+        )
     }
 }

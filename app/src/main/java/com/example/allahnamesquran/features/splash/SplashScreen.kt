@@ -18,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import org.koin.androidx.compose.koinViewModel
 
@@ -44,6 +46,12 @@ fun SplashScreen(
             null -> Unit
         }
     }
+
+    SplashScreenContent()
+}
+
+@Composable
+private fun SplashScreenContent() {
 
     Box(
         modifier = Modifier
@@ -69,5 +77,13 @@ fun SplashScreen(
                 color = Color.White
             )
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF2F6D58, heightDp = 640)
+@Composable
+private fun SplashScreenPreview() {
+    PreviewSurface {
+        SplashScreenContent()
     }
 }

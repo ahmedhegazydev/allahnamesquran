@@ -65,6 +65,8 @@ class QuranRepositoryImpl(
                 id = it.globalAyahNumber,
                 surahName = it.surahName,
                 ayahNumber = it.ayahNumberInSurah,
+                page = it.page,
+                juz = it.juz,
                 text = it.textOriginal
             )
         }

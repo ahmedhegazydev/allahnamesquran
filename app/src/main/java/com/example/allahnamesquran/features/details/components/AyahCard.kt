@@ -20,9 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.preview.PreviewAyahs
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.core.ui.theme.GoldAccent
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.details.AyahUiModel
@@ -70,7 +73,13 @@ fun AyahCard(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = stringResource(R.string.ayah_reference, item.surahName, item.ayahNumber),
+                text = stringResource(
+                    R.string.ayah_reference_with_details,
+                    item.surahName,
+                    item.ayahNumber,
+                    item.page,
+                    item.juz
+                ),
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.62f),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
@@ -89,5 +98,13 @@ fun AyahCard(
             modifier = Modifier.fillMaxWidth()
         )
 
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@Composable
+private fun AyahCardPreview() {
+    PreviewSurface {
+        AyahCard(item = PreviewAyahs.first())
     }
 }

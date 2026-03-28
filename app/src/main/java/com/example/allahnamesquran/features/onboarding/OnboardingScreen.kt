@@ -35,22 +35,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 
 @Composable
 fun OnboardingScreen(
     onStartClick: () -> Unit
 ) {
+    OnboardingScreenContent(
+        onStartClick = onStartClick,
+        playSound = true
+    )
+}
+
+@Composable
+private fun OnboardingScreenContent(
+    onStartClick: () -> Unit,
+    playSound: Boolean
+) {
     val context = LocalContext.current
 
-    DisposableEffect(context) {
-        val mediaPlayer = MediaPlayer.create(context, R.raw.nrqhez49tgu)?.apply {
-            isLooping = false
-            start()
+    DisposableEffect(context, playSound) {
+        val mediaPlayer = if (playSound) {
+            MediaPlayer.create(context, R.raw.nrqhez49tgu)?.apply {
+                isLooping = false
+                start()
+            }
+        } else {
+            null
         }
 
         onDispose {
@@ -252,5 +269,16 @@ private fun OnboardingFeatureItem(
             }
         }
 
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@Composable
+private fun OnboardingScreenPreview() {
+    PreviewSurface {
+        OnboardingScreenContent(
+            onStartClick = {},
+            playSound = false
+        )
     }
 }

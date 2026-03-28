@@ -24,6 +24,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import com.example.allahnamesquran.core.ui.components.AsmaTabRow
+import com.example.allahnamesquran.core.ui.preview.PreviewFavoriteHomeUiState
+import com.example.allahnamesquran.core.ui.preview.PreviewHomeUiState
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.features.home.components.EmptyNamesState
 import com.example.allahnamesquran.features.home.components.HomeHeader
 import com.example.allahnamesquran.features.home.components.NameCard
@@ -54,6 +58,24 @@ fun HomeScreen(
         viewModel.onIntent(HomeIntent.LoadData)
     }
 
+    HomeScreenContent(
+        state = state,
+        onNameClick = onNameClick,
+        onSearchChanged = { viewModel.onIntent(HomeIntent.SearchChanged(it)) },
+        onTabSelected = { viewModel.onIntent(HomeIntent.TabSelected(it)) },
+        onFavoriteClick = { viewModel.onIntent(HomeIntent.FavoriteClicked(it)) }
+    )
+}
+
+@Composable
+private fun HomeScreenContent(
+    state: HomeUiState,
+    onNameClick: (Int) -> Unit,
+    onSearchChanged: (String) -> Unit,
+    onTabSelected: (HomeTab) -> Unit,
+    onFavoriteClick: (Int) -> Unit
+) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,12 +87,12 @@ fun HomeScreen(
             selectedTab = state.selectedTab,
             allCount = if (state.isLoading) 0 else state.names.size,
             favoriteCount = state.names.count { it.isFavorite },
-            onSearchChanged = { viewModel.onIntent(HomeIntent.SearchChanged(it)) }
+            onSearchChanged = onSearchChanged
         )
 
         AsmaTabRow(
             selectedTab = state.selectedTab,
-            onTabSelected = { viewModel.onIntent(HomeIntent.TabSelected(it)) },
+            onTabSelected = onTabSelected,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
         )
 
@@ -93,9 +115,7 @@ fun HomeScreen(
                     NameCard(
                         item = item,
                         onClick = { onNameClick(item.id) },
-                        onFavoriteClick = {
-                            viewModel.onIntent(HomeIntent.FavoriteClicked(item.id))
-                        }
+                        onFavoriteClick = { onFavoriteClick(item.id) }
                     )
                 }
             }
@@ -178,6 +198,62 @@ private fun HomeNameCardSkeleton(shimmerAlpha: Float) {
                 .background(placeholderColor, RoundedCornerShape(12.dp))
                 .fillMaxWidth(0.5f)
                 .height(20.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@Composable
+private fun HomeScreenPreview() {
+    PreviewSurface {
+        HomeScreenContent(
+            state = PreviewHomeUiState,
+            onNameClick = {},
+            onSearchChanged = {},
+            onTabSelected = {},
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@Composable
+private fun HomeScreenFavoritesPreview() {
+    PreviewSurface {
+        HomeScreenContent(
+            state = PreviewFavoriteHomeUiState,
+            onNameClick = {},
+            onSearchChanged = {},
+            onTabSelected = {},
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@Composable
+private fun HomeScreenLoadingPreview() {
+    PreviewSurface {
+        HomeScreenContent(
+            state = PreviewHomeUiState.copy(isLoading = true, visibleNames = emptyList()),
+            onNameClick = {},
+            onSearchChanged = {},
+            onTabSelected = {},
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@Composable
+private fun HomeScreenEmptyPreview() {
+    PreviewSurface {
+        HomeScreenContent(
+            state = PreviewHomeUiState.copy(visibleNames = emptyList(), isEmpty = true),
+            onNameClick = {},
+            onSearchChanged = {},
+            onTabSelected = {},
+            onFavoriteClick = {}
         )
     }
 }

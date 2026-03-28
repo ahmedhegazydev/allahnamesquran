@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.MenuBook
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,8 +23,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.home.HomeTab
 
@@ -40,7 +42,7 @@ fun AsmaTabRow(
     ) {
         AsmaTabItem(
             title = stringResource(R.string.tab_all_names),
-            icon = Icons.Rounded.MenuBook,
+            icon = Icons.AutoMirrored.Rounded.MenuBook,
             selected = selectedTab == HomeTab.ALL,
             onClick = { onTabSelected(HomeTab.ALL) },
             modifier = Modifier.weight(1f)
@@ -92,6 +94,28 @@ private fun AsmaTabItem(
             color = if (selected) Color.White else MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             fontFamily = QuranFontFamily
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@Composable
+private fun AsmaTabRowPreview() {
+    PreviewSurface {
+        AsmaTabRow(
+            selectedTab = HomeTab.ALL,
+            onTabSelected = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@Composable
+private fun AsmaTabRowFavoritesPreview() {
+    PreviewSurface {
+        AsmaTabRow(
+            selectedTab = HomeTab.FAVORITES,
+            onTabSelected = {}
         )
     }
 }

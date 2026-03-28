@@ -7,6 +7,8 @@ data class AyahUiModel(
     val id: Int,
     val surahName: String,
     val ayahNumber: Int,
+    val page: Int,
+    val juz: Int,
     val text: String
 )
 

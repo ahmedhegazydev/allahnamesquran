@@ -26,9 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.preview.PreviewNameItems
+import com.example.allahnamesquran.core.ui.preview.PreviewSurface
 import com.example.allahnamesquran.core.ui.theme.GoldAccent
 import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.home.NameUiModel
@@ -110,5 +113,29 @@ fun NameCard(
                 fontFamily = QuranFontFamily
             )
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@Composable
+private fun NameCardPreview() {
+    PreviewSurface {
+        NameCard(
+            item = PreviewNameItems.first(),
+            onClick = {},
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@Composable
+private fun NameCardUnfavoritePreview() {
+    PreviewSurface {
+        NameCard(
+            item = PreviewNameItems[1],
+            onClick = {},
+            onFavoriteClick = {}
+        )
     }
 }

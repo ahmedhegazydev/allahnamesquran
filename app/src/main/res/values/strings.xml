@@ -13,6 +13,7 @@
     <string name="ayahs_count">%1$d verses</string>
     <string name="ayahs_section_title">Verses mentioning this name</string>
     <string name="ayah_reference">%1$s • Verse %2$d</string>
+    <string name="ayah_reference_with_details">%1$s • Verse %2$d • Page %3$d • Juz %4$d</string>
     <string name="onboarding_title">Welcome</string>
     <string name="onboarding_description">Choose one of Allah’s beautiful names to explore the verses where it appears in the Holy Quran</string>
     <string name="onboarding_feature_names_title">99 names of Allah</string>
