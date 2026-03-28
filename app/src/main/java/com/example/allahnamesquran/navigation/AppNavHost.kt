@@ -22,7 +22,8 @@ import org.koin.dsl.module
 fun AppNavHost(
     modifier: Modifier = Modifier
 ) {
-    // تم نقل navController للداخل لضمان استقرار (Stability) الـ AppNavHost
+    // NavHostController is unstable, so we keep it local to AppNavHost
+    // This makes AppNavHost itself stable and skippable.
     val navController = rememberNavController()
 
     NavHost(

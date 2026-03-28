@@ -70,3 +70,4 @@ fastlane/test_output/
 # Compose compiler reports / metrics if you enable them
 compose_metrics/
 compose_reports/
+.hotswan/

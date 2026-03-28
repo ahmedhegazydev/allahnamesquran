@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.ui.unit.TextUnit
 import com.example.allahnamesquran.features.details.components.AyahCard
 import com.example.allahnamesquran.features.details.components.DetailsHeader
 import org.koin.androidx.compose.koinViewModel
@@ -23,9 +22,9 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun DetailsScreen(
     nameId: Int,
-    onBackClick: () -> Unit,
-    viewModel: DetailsViewModel = koinViewModel()
+    onBackClick: () -> Unit
 ) {
+    val viewModel: DetailsViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(nameId) {

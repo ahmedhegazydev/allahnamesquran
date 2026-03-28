@@ -19,10 +19,11 @@ import com.example.allahnamesquran.features.home.HomeTab
 @Composable
 fun AsmaTabRow(
     selectedTab: HomeTab,
-    onTabSelected: (HomeTab) -> Unit
+    onTabSelected: (HomeTab) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AsmaTabItem(

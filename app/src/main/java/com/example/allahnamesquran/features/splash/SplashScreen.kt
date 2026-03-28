@@ -25,9 +25,9 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SplashScreen(
     onNavigateToOnboarding: () -> Unit,
-    onNavigateToHome: () -> Unit,
-    viewModel: SplashViewModel = koinViewModel()
+    onNavigateToHome: () -> Unit
 ) {
+    val viewModel: SplashViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {

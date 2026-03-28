@@ -23,9 +23,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-        onNameClick: (Int) -> Unit,
-    viewModel: HomeViewModel = koinViewModel()
+    onNameClick: (Int) -> Unit
 ) {
+    val viewModel: HomeViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
