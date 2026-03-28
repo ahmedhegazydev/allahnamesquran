@@ -1,21 +1,17 @@
 package com.example.allahnamesquran.features.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.allahnamesquran.data.repository.QuranRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
-
-    private val seedNames = listOf(
-        NameUiModel(1, "الرَّحْمَنُ", "الرحيم", 4, true),
-        NameUiModel(2, "الرَّحِيمُ", "الرحيم بالمؤمنين", 3, true),
-        NameUiModel(3, "الْقُدُّوسُ", "المنزه عن النقائص", 2, false),
-        NameUiModel(4, "السَّلَامُ", "السالم من كل عيب", 1, false),
-        NameUiModel(5, "الْمَلِكُ", "المالك لكل شيء", 2, false),
-        NameUiModel(6, "التَّوَّابُ", "القابل للتوبة", 2, true)
-    )
+class HomeViewModel(
+    private val repository: QuranRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeUiState())
     val state: StateFlow<HomeUiState> = _state.asStateFlow()
@@ -30,13 +26,28 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadData() {
-        val visible = filterNames(seedNames, HomeTab.ALL, "")
-        _state.update {
-            it.copy(
-                names = seedNames,
-                visibleNames = visible,
-                isEmpty = visible.isEmpty()
-            )
+        if (_state.value.names.isNotEmpty()) return
+
+        viewModelScope.launch {
+            val allNames = repository.getAllAllahNames().map { name ->
+                NameUiModel(
+                    id = name.id,
+                    name = name.name,
+                    description = name.description,
+                    ayahCount = repository.searchAyahsByAllahName(name.name).size,
+                    isFavorite = false
+                )
+            }
+
+            val visible = filterNames(allNames, HomeTab.ALL, "")
+            _state.update {
+                it.copy(
+                    names = allNames,
+                    visibleNames = visible,
+                    isEmpty = visible.isEmpty(),
+                    isLoading = false
+                )
+            }
         }
     }
 
@@ -90,7 +101,7 @@ class HomeViewModel : ViewModel() {
         if (query.isBlank()) return source
 
         return source.filter {
-            it.name.contains(query) || it.meaning.contains(query)
+            it.name.contains(query)
         }
     }
 }

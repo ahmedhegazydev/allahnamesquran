@@ -15,8 +15,6 @@ data class DetailsUiState(
     val isLoading: Boolean = false,
     val nameId: Int? = null,
     val name: String = "",
-    val transliteration: String = "",
-    val meaning: String = "",
     val description: String = "",
     val ayahsCount: Int = 0,
     val ayahs: List<AyahUiModel> = emptyList(),

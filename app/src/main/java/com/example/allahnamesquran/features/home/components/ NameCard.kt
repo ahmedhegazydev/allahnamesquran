@@ -62,9 +62,10 @@ fun NameCard(
         )
 
         Text(
-            text = item.meaning,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            fontSize = 20.sp
+            text = item.description,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.72f),
+            fontSize = 16.sp,
+            lineHeight = 24.sp
         )
 
         Text(

@@ -29,8 +29,6 @@ import com.example.allahnamesquran.R
 @Composable
 fun DetailsHeader(
     name: String,
-    transliteration: String,
-    meaning: String,
     description: String,
     ayahsCount: Int,
     isFavorite: Boolean,
@@ -84,25 +82,14 @@ fun DetailsHeader(
             fontWeight = FontWeight.Bold
         )
 
-        Text(
-            text = transliteration,
-            color = Color.White.copy(alpha = 0.88f),
-            fontSize = 18.sp
-        )
-
-        Text(
-            text = meaning,
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Text(
-            text = description,
-            color = Color.White.copy(alpha = 0.92f),
-            fontSize = 17.sp,
-            lineHeight = 28.sp
-        )
+        if (description.isNotBlank()) {
+            Text(
+                text = description,
+                color = Color.White.copy(alpha = 0.92f),
+                fontSize = 18.sp,
+                lineHeight = 30.sp
+            )
+        }
 
         Row(
             modifier = Modifier

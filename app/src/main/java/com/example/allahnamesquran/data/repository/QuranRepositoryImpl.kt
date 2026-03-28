@@ -1,9 +1,13 @@
 package com.example.allahnamesquran.data.repository
 
+import com.example.allahnamesquran.core.utils.ArabicTextNormalizer
 import com.example.allahnamesquran.data.local.dao.AyahDao
 import com.example.allahnamesquran.data.mapper.AyahMapper
+import com.example.allahnamesquran.data.model.AllahName
+import com.example.allahnamesquran.data.model.AyahSearchResult
 import com.example.allahnamesquran.data.preferences.AppPreferences
 import com.example.allahnamesquran.data.remote.QuranApiService
+import com.example.allahnamesquran.data.static.AllahNamesDataSource
 import kotlinx.coroutines.flow.first
 
 class QuranRepositoryImpl(
@@ -34,5 +38,27 @@ class QuranRepositoryImpl(
 
     override suspend fun setOnboardingSeen() {
         appPreferences.setOnboardingSeen(true)
+    }
+
+    override fun getAllAllahNames(): List<AllahName> {
+        return AllahNamesDataSource.allNames
+    }
+
+    override fun getAllahNameById(id: Int): AllahName? {
+        return AllahNamesDataSource.allNames.firstOrNull { it.id == id }
+    }
+
+    override suspend fun searchAyahsByAllahName(name: String): List<AyahSearchResult> {
+        val normalizedName = ArabicTextNormalizer.normalize(name)
+        if (normalizedName.isBlank()) return emptyList()
+
+        return ayahDao.searchAyahsByName(normalizedName).map {
+            AyahSearchResult(
+                id = it.globalAyahNumber,
+                surahName = it.surahName,
+                ayahNumber = it.ayahNumberInSurah,
+                text = it.textOriginal
+            )
+        }
     }
 }

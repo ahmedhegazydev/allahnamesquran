@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.allahnamesquran.core.ui.theme.AllahNamesQuranTheme
+import com.example.allahnamesquran.data.model.AllahName
+import com.example.allahnamesquran.data.model.AyahSearchResult
 import com.example.allahnamesquran.features.details.DetailsScreen
 import com.example.allahnamesquran.features.home.HomeScreen
 import com.example.allahnamesquran.features.onboarding.OnboardingScreen
@@ -92,6 +94,9 @@ fun AppNavHostPreview() {
                     override suspend fun syncQuranIfNeeded() {}
                     override suspend fun isOnboardingSeen(): Boolean = false
                     override suspend fun setOnboardingSeen() {}
+                    override fun getAllAllahNames(): List<AllahName> = emptyList()
+                    override fun getAllahNameById(id: Int): AllahName? = null
+                    override suspend fun searchAyahsByAllahName(name: String): List<AyahSearchResult> = emptyList()
                 }
             }
             factory { SplashViewModel(get()) }

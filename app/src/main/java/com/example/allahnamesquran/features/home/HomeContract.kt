@@ -6,7 +6,7 @@ import androidx.compose.runtime.Immutable
 data class NameUiModel(
     val id: Int,
     val name: String,
-    val meaning: String,
+    val description: String,
     val ayahCount: Int,
     val isFavorite: Boolean
 )

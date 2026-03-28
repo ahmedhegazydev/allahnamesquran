@@ -43,8 +43,6 @@ fun DetailsScreen(
         item {
             DetailsHeader(
                 name = state.name,
-                transliteration = state.transliteration,
-                meaning = state.meaning,
                 description = state.description,
                 ayahsCount = state.ayahsCount,
                 isFavorite = state.isFavorite,
