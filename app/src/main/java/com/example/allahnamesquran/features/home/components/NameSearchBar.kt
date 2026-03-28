@@ -9,8 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 
 @Composable
 fun NameSearchBar(
@@ -21,7 +23,7 @@ fun NameSearchBar(
         value = query,
         onValueChange = onQueryChange,
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(stringResource(R.string.search_name_placeholder)) },
+        placeholder = { Text(stringResource(R.string.search_name_placeholder), fontFamily = QuranFontFamily) },
         shape = RoundedCornerShape(22.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = Color.White,
@@ -29,6 +31,7 @@ fun NameSearchBar(
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent
         ),
+        textStyle = TextStyle(fontFamily = QuranFontFamily),
         singleLine = true
     )
 }

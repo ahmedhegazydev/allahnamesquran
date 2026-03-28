@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.details.AyahUiModel
 
 @Composable
@@ -34,14 +35,16 @@ fun AyahCard(
             color = MaterialTheme.colorScheme.onBackground,
             fontSize = 24.sp,
             lineHeight = 40.sp,
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            fontFamily = QuranFontFamily
         )
 
         Text(
             text = stringResource(R.string.ayah_reference, item.surahName, item.ayahNumber),
             color = MaterialTheme.colorScheme.primary,
             fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            fontFamily = QuranFontFamily
         )
     }
 }

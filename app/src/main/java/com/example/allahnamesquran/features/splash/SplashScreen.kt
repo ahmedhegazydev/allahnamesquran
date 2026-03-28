@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -59,7 +60,8 @@ fun SplashScreen(
                 text = stringResource(R.string.app_name),
                 color = Color.White,
                 fontSize = 34.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = QuranFontFamily
             )
 
             CircularProgressIndicator(

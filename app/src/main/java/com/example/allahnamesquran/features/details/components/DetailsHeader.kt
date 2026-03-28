@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 
 @Composable
 fun DetailsHeader(
@@ -63,6 +64,7 @@ fun DetailsHeader(
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = QuranFontFamily,
                 modifier = Modifier.weight(1f)
             )
 
@@ -79,7 +81,8 @@ fun DetailsHeader(
             text = name,
             color = Color.White,
             fontSize = 34.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            fontFamily = QuranFontFamily
         )
 
         if (description.isNotBlank()) {
@@ -87,7 +90,8 @@ fun DetailsHeader(
                 text = description,
                 color = Color.White.copy(alpha = 0.92f),
                 fontSize = 18.sp,
-                lineHeight = 30.sp
+                lineHeight = 30.sp,
+                fontFamily = QuranFontFamily
             )
         }
 
@@ -104,7 +108,8 @@ fun DetailsHeader(
                 text = stringResource(R.string.ayahs_count, ayahsCount),
                 color = Color.White,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = QuranFontFamily
             )
         }
     }

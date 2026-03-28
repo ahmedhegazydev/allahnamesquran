@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 
 @Composable
 fun OnboardingScreen(
@@ -96,6 +97,7 @@ fun OnboardingScreen(
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
+                    fontFamily = QuranFontFamily,
                     textAlign = TextAlign.Center
                 )
 
@@ -105,6 +107,7 @@ fun OnboardingScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 20.sp,
                     lineHeight = 31.sp,
+                    fontFamily = QuranFontFamily,
                     modifier = Modifier.fillMaxWidth(0.84f)
                 )
 
@@ -171,7 +174,8 @@ fun OnboardingScreen(
                     text = stringResource(R.string.onboarding_start),
                     modifier = Modifier.padding(vertical = 8.dp),
                     fontSize = 21.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = QuranFontFamily
                 )
             }
         }
@@ -219,6 +223,7 @@ private fun OnboardingFeatureItem(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
+                fontFamily = QuranFontFamily,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Right,
                 modifier = Modifier.fillMaxWidth()
@@ -227,6 +232,7 @@ private fun OnboardingFeatureItem(
                 text = subtitle,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.72f),
+                fontFamily = QuranFontFamily,
                 textAlign = TextAlign.Right,
                 modifier = Modifier.fillMaxWidth()
             )

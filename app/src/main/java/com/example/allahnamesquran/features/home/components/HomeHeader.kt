@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
 import com.example.allahnamesquran.core.ui.components.AsmaTabRow
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.home.HomeTab
 
 @Composable
@@ -43,13 +44,15 @@ fun HomeHeader(
             text = stringResource(R.string.home_title),
             color = Color.White,
             fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            fontFamily = QuranFontFamily
         )
 
         Text(
             text = stringResource(R.string.home_subtitle),
             color = Color.White.copy(alpha = 0.9f),
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            fontFamily = QuranFontFamily
         )
 
         Row(
@@ -69,7 +72,8 @@ fun HomeHeader(
                 },
                 color = Color.White,
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = QuranFontFamily
             )
         }
 

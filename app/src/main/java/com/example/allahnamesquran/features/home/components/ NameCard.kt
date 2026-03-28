@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.home.NameUiModel
 
 @Composable
@@ -58,20 +59,23 @@ fun NameCard(
             text = item.name,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 30.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            fontFamily = QuranFontFamily
         )
 
         Text(
             text = item.description,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.72f),
             fontSize = 16.sp,
-            lineHeight = 24.sp
+            lineHeight = 24.sp,
+            fontFamily = QuranFontFamily
         )
 
         Text(
             text = stringResource(R.string.ayahs_count, item.ayahCount),
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.65f),
-            fontSize = 18.sp
+            fontSize = 18.sp,
+            fontFamily = QuranFontFamily
         )
     }
 }

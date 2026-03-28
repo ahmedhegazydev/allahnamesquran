@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import com.example.allahnamesquran.R
+import com.example.allahnamesquran.core.ui.theme.QuranFontFamily
 import com.example.allahnamesquran.features.details.components.AyahCard
 import com.example.allahnamesquran.features.details.components.DetailsHeader
 import org.koin.androidx.compose.koinViewModel
@@ -58,6 +59,7 @@ fun DetailsScreen(
                 text = stringResource(R.string.ayahs_section_title),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium,
+                fontFamily = QuranFontFamily,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
             )
         }
