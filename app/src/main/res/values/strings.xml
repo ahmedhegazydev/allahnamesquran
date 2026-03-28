@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">AllahNamesQuran</string>
+    <string name="app_name">Allah Names Quran</string>
+    <string name="home_title">Allah Names Verses</string>
+    <string name="home_subtitle">Explore the verses connected to each name</string>
+    <string name="all_names_count">%1$d names</string>
+    <string name="favorite_names_count">%1$d favorites</string>
+    <string name="search_name_placeholder">Search for a name…</string>
+    <string name="tab_all_names">All Names</string>
+    <string name="tab_favorites">Favorites</string>
+    <string name="empty_results_title">No results found</string>
+    <string name="empty_results_subtitle">Try searching with another word</string>
+    <string name="details_title">Name Details</string>
+    <string name="ayahs_count">%1$d verses</string>
+    <string name="ayahs_section_title">Verses mentioning this name</string>
+    <string name="ayah_reference">%1$s • Verse %2$d</string>
+    <string name="onboarding_title">Welcome</string>
+    <string name="onboarding_description">Choose one of Allah’s beautiful names to explore the verses where it appears in the Holy Quran</string>
+    <string name="onboarding_start">Get Started</string>
 </resources>

@@ -20,9 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.allahnamesquran.R
 
 @Composable
 fun DetailsHeader(
@@ -59,7 +61,7 @@ fun DetailsHeader(
             }
 
             Text(
-                text = "تفاصيل الاسم",
+                text = stringResource(R.string.details_title),
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -112,7 +114,7 @@ fun DetailsHeader(
                 .padding(horizontal = 18.dp, vertical = 14.dp)
         ) {
             Text(
-                text = "$ayahsCount آيات",
+                text = stringResource(R.string.ayahs_count, ayahsCount),
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold

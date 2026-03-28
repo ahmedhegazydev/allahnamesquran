@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.allahnamesquran.R
 import com.example.allahnamesquran.core.ui.components.AsmaTabRow
 import com.example.allahnamesquran.features.home.HomeTab
 
@@ -38,14 +40,14 @@ fun HomeHeader(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "آيات الأسماء الحسنى",
+            text = stringResource(R.string.home_title),
             color = Color.White,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold
         )
 
         Text(
-            text = "استكشف الآيات المرتبطة بكل اسم",
+            text = stringResource(R.string.home_subtitle),
             color = Color.White.copy(alpha = 0.9f),
             fontSize = 20.sp
         )
@@ -60,7 +62,11 @@ fun HomeHeader(
                 .padding(horizontal = 20.dp, vertical = 18.dp)
         ) {
             Text(
-                text = if (selectedTab == HomeTab.FAVORITES) "$favoriteCount أسماء" else "$allCount اسمًا",
+                text = if (selectedTab == HomeTab.FAVORITES) {
+                    stringResource(R.string.favorite_names_count, favoriteCount)
+                } else {
+                    stringResource(R.string.all_names_count, allCount)
+                },
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold

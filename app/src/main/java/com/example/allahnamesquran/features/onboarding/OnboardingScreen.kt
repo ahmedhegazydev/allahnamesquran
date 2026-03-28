@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.allahnamesquran.R
 
 @Composable
 fun OnboardingScreen(
@@ -44,14 +46,14 @@ fun OnboardingScreen(
                 modifier = Modifier.padding(top = 100.dp)
             ) {
                 Text(
-                    text = "مرحبًا بك",
+                    text = stringResource(R.string.onboarding_title),
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "اختر اسمًا من أسماء الله الحسنى لتستكشف الآيات التي ورد فيها في القرآن الكريم",
+                    text = stringResource(R.string.onboarding_description),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 22.sp,
@@ -71,7 +73,7 @@ fun OnboardingScreen(
                 )
             ) {
                 Text(
-                    text = "ابدأ الآن",
+                    text = stringResource(R.string.onboarding_start),
                     modifier = Modifier.padding(vertical = 8.dp),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold

@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import com.example.allahnamesquran.R
 import com.example.allahnamesquran.features.details.components.AyahCard
 import com.example.allahnamesquran.features.details.components.DetailsHeader
 import org.koin.androidx.compose.koinViewModel
@@ -55,7 +57,7 @@ fun DetailsScreen(
 
         item {
             Text(
-                text = "الآيات التي ورد فيها الاسم",
+                text = stringResource(R.string.ayahs_section_title),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)

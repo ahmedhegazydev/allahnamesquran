@@ -12,8 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.allahnamesquran.R
 import com.example.allahnamesquran.features.home.HomeTab
 
 @Composable
@@ -27,14 +29,14 @@ fun AsmaTabRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AsmaTabItem(
-            title = "جميع الأسماء",
+            title = stringResource(R.string.tab_all_names),
             selected = selectedTab == HomeTab.ALL,
             onClick = { onTabSelected(HomeTab.ALL) },
             modifier = Modifier.weight(1f)
         )
 
         AsmaTabItem(
-            title = "المفضلة",
+            title = stringResource(R.string.tab_favorites),
             selected = selectedTab == HomeTab.FAVORITES,
             onClick = { onTabSelected(HomeTab.FAVORITES) },
             modifier = Modifier.weight(1f)

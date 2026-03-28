@@ -17,9 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.allahnamesquran.R
 import com.example.allahnamesquran.features.home.NameUiModel
 
 @Composable
@@ -66,7 +68,7 @@ fun NameCard(
         )
 
         Text(
-            text = "${item.ayahCount} آيات",
+            text = stringResource(R.string.ayahs_count, item.ayahCount),
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.65f),
             fontSize = 18.sp
         )
