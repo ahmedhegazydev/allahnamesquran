@@ -54,7 +54,7 @@ private fun AsmaTabItem(
     Row(
         modifier = modifier
             .background(
-                color = if (selected) MaterialTheme.colorScheme.primary else Color.White,
+                color = if (selected) Color.White else MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(22.dp)
             )
             .clickable(onClick = onClick)
@@ -63,7 +63,7 @@ private fun AsmaTabItem(
     ) {
         Text(
             text = title,
-            color = if (selected) Color.White else MaterialTheme.colorScheme.onBackground,
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
     }

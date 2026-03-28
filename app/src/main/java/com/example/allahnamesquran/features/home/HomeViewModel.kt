@@ -29,6 +29,10 @@ class HomeViewModel(
         if (_state.value.names.isNotEmpty()) return
 
         viewModelScope.launch {
+            _state.update {
+                it.copy(isLoading = true, isEmpty = false)
+            }
+
             val allNames = repository.getAllAllahNames().map { name ->
                 NameUiModel(
                     id = name.id,
