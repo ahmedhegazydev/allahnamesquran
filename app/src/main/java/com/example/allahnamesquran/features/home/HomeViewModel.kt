@@ -33,13 +33,15 @@ class HomeViewModel(
                 it.copy(isLoading = true, isEmpty = false)
             }
 
+            val favoriteIds = repository.getFavoriteNameIds()
+
             val allNames = repository.getAllAllahNames().map { name ->
                 NameUiModel(
                     id = name.id,
                     name = name.name,
                     description = name.description,
                     ayahCount = repository.searchAyahsByAllahName(name.name).size,
-                    isFavorite = false
+                    isFavorite = name.id in favoriteIds
                 )
             }
 
@@ -78,16 +80,22 @@ class HomeViewModel(
     }
 
     private fun toggleFavorite(id: Int) {
-        _state.update { current ->
-            val updatedNames = current.names.map {
-                if (it.id == id) it.copy(isFavorite = !it.isFavorite) else it
+        viewModelScope.launch {
+            val target = _state.value.names.firstOrNull { it.id == id } ?: return@launch
+            val newFavoriteState = !target.isFavorite
+            repository.setFavoriteName(id, newFavoriteState)
+
+            _state.update { current ->
+                val updatedNames = current.names.map {
+                    if (it.id == id) it.copy(isFavorite = newFavoriteState) else it
+                }
+                val visible = filterNames(updatedNames, current.selectedTab, current.searchQuery)
+                current.copy(
+                    names = updatedNames,
+                    visibleNames = visible,
+                    isEmpty = visible.isEmpty()
+                )
             }
-            val visible = filterNames(updatedNames, current.selectedTab, current.searchQuery)
-            current.copy(
-                names = updatedNames,
-                visibleNames = visible,
-                isEmpty = visible.isEmpty()
-            )
         }
     }
 

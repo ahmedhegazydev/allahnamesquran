@@ -25,7 +25,7 @@ class DetailsViewModel(
 
     private fun loadData(nameId: Int) {
         viewModelScope.launch {
-            val currentFavorite = _state.value.takeIf { it.nameId == nameId }?.isFavorite ?: false
+            val favoriteIds = repository.getFavoriteNameIds()
             val name = repository.getAllahNameById(nameId)
             val ayahs = name?.let { repository.searchAyahsByAllahName(it.name) }.orEmpty()
 
@@ -42,14 +42,22 @@ class DetailsViewModel(
                     )
                 },
                 ayahsCount = ayahs.size,
-                isFavorite = currentFavorite
+                isFavorite = nameId in favoriteIds
             )
         }
     }
 
     private fun toggleFavorite() {
-        _state.update {
-            it.copy(isFavorite = !it.isFavorite)
+        viewModelScope.launch {
+            val current = _state.value
+            val nameId = current.nameId ?: return@launch
+            val newFavoriteState = !current.isFavorite
+
+            repository.setFavoriteName(nameId, newFavoriteState)
+
+            _state.update {
+                it.copy(isFavorite = newFavoriteState)
+            }
         }
     }
 }

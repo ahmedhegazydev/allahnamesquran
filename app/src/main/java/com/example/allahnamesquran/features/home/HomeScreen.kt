@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,6 +35,13 @@ import com.example.allahnamesquran.features.home.components.EmptyNamesState
 import com.example.allahnamesquran.features.home.components.HomeHeader
 import com.example.allahnamesquran.features.home.components.NameCard
 import org.koin.androidx.compose.koinViewModel
+
+private val HomeGridContentPadding = PaddingValues(
+    start = 16.dp,
+    top = 14.dp,
+    end = 16.dp,
+    bottom = 28.dp
+)
 
 @Composable
 fun HomeScreen(
@@ -73,9 +81,8 @@ fun HomeScreen(
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = HomeGridContentPadding,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -110,9 +117,8 @@ private fun HomeNamesGridSkeleton() {
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = HomeGridContentPadding,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {

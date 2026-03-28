@@ -48,6 +48,14 @@ class QuranRepositoryImpl(
         return AllahNamesDataSource.allNames.firstOrNull { it.id == id }
     }
 
+    override suspend fun getFavoriteNameIds(): Set<Int> {
+        return appPreferences.favoriteNameIds.first()
+    }
+
+    override suspend fun setFavoriteName(id: Int, isFavorite: Boolean) {
+        appPreferences.setFavorite(nameId = id, isFavorite = isFavorite)
+    }
+
     override suspend fun searchAyahsByAllahName(name: String): List<AyahSearchResult> {
         val normalizedName = ArabicTextNormalizer.normalize(name)
         if (normalizedName.isBlank()) return emptyList()
