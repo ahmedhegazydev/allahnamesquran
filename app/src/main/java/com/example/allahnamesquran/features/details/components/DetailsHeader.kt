@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Share
@@ -42,8 +41,7 @@ fun DetailsHeader(
     isFavorite: Boolean,
     onBackClick: () -> Unit,
     onShareClick: () -> Unit,
-    onFavoriteClick: () -> Unit,
-    onForceCrashClick: (() -> Unit)? = null
+    onFavoriteClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -75,19 +73,6 @@ fun DetailsHeader(
             Spacer(modifier = Modifier.weight(1f))
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                onForceCrashClick?.let { forceCrashClick ->
-                    HeaderActionButton(
-                        onClick = forceCrashClick,
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Rounded.BugReport,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                    )
-                }
-
                 HeaderActionButton(
                     onClick = onShareClick,
                     icon = {
@@ -168,8 +153,7 @@ private fun DetailsHeaderPreview() {
             isFavorite = true,
             onBackClick = {},
             onShareClick = {},
-            onFavoriteClick = {},
-            onForceCrashClick = {}
+            onFavoriteClick = {}
         )
     }
 }
@@ -185,8 +169,7 @@ private fun DetailsHeaderWithoutDescriptionPreview() {
             isFavorite = false,
             onBackClick = {},
             onShareClick = {},
-            onFavoriteClick = {},
-            onForceCrashClick = {}
+            onFavoriteClick = {}
         )
     }
 }
