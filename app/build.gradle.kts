@@ -43,6 +43,11 @@ android {
             "SUPABASE_PUBLISHABLE_KEY",
             quotedBuildConfigValue("SUPABASE_PUBLISHABLE_KEY")
         )
+        buildConfigField(
+            "String",
+            "GOOGLE_WEB_CLIENT_ID",
+            quotedBuildConfigValue("GOOGLE_WEB_CLIENT_ID")
+        )
     }
 
     buildTypes {
@@ -84,7 +89,11 @@ dependencies {
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
     implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.auth)
     implementation(libs.supabase.postgrest)
     implementation(libs.ktor.client.android)
     implementation(libs.kotlinx.serialization.json)

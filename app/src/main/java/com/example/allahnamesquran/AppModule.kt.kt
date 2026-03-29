@@ -1,6 +1,8 @@
 package com.example.allahnamesquran
 
 import androidx.room.Room
+import com.example.allahnamesquran.data.auth.AuthRepository
+import com.example.allahnamesquran.data.auth.SupabaseAuthManager
 import com.example.allahnamesquran.data.local.AppDatabase
 import com.example.allahnamesquran.data.preferences.AppPreferences
 import com.example.allahnamesquran.data.remote.NetworkModule
@@ -10,6 +12,7 @@ import com.example.allahnamesquran.data.repository.QuranRepositoryImpl
 import com.example.allahnamesquran.features.details.DetailsViewModel
 import com.example.allahnamesquran.features.home.HomeViewModel
 import com.example.allahnamesquran.features.onboarding.OnboardingViewModel
+import com.example.allahnamesquran.features.signin.SignInViewModel
 import com.example.allahnamesquran.features.splash.SplashViewModel
 import com.example.allahnamesquran.notifications.AndroidDailyNameReminderScheduler
 import com.example.allahnamesquran.notifications.DailyNameReminderScheduler
@@ -33,6 +36,12 @@ val appModule = module {
 
     single { AppPreferences(androidContext()) }
     single { SupabaseProvider() }
+    single<AuthRepository> {
+        SupabaseAuthManager(
+            supabaseProvider = get(),
+            appPreferences = get()
+        )
+    }
 
     single<DailyNameReminderScheduler> {
         AndroidDailyNameReminderScheduler(androidContext())
@@ -48,6 +57,7 @@ val appModule = module {
 
     viewModelOf(::SplashViewModel)
     viewModelOf(::OnboardingViewModel)
+    viewModelOf(::SignInViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::DetailsViewModel)
 }

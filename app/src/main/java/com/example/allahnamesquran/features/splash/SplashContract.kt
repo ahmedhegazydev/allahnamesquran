@@ -10,6 +10,7 @@ data class SplashUiState(
 
 enum class SplashDestination {
     ONBOARDING,
+    SIGN_IN,
     HOME
 }
 
