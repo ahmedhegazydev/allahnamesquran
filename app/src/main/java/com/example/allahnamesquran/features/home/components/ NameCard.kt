@@ -56,6 +56,19 @@ fun NameCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
+
+
+            Text(
+                text = item.name,
+                modifier = Modifier.weight(1f),
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = QuranFontFamily,
+                textAlign = TextAlign.End
+            )
+
+
             Box(
                 contentAlignment = Alignment.TopStart
             ) {
@@ -70,16 +83,6 @@ fun NameCard(
                     modifier = Modifier.clickable(onClick = onFavoriteClick)
                 )
             }
-
-            Text(
-                text = item.name,
-                modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = QuranFontFamily,
-                textAlign = TextAlign.End
-            )
         }
 
         Text(
@@ -94,7 +97,7 @@ fun NameCard(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

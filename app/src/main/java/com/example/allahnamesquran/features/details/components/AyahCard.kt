@@ -34,13 +34,13 @@ import com.example.allahnamesquran.features.details.AyahUiModel
 fun AyahCard(
     item: AyahUiModel
 ) {
-        val referenceLines = stringResource(
-            R.string.ayah_reference_with_details,
-            item.surahName,
-            item.ayahNumber,
-            item.page,
-            item.juz
-        ).split('\n', limit = 2)
+    val referenceText = stringResource(
+        R.string.ayah_reference_with_details,
+        item.surahName,
+        item.ayahNumber,
+        item.page,
+        item.juz
+    )
 
         Column(
             modifier = Modifier
@@ -80,19 +80,13 @@ fun AyahCard(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
-                    referenceLines.forEach { line ->
-                        Text(
-                            text = line,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.62f),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            textAlign = TextAlign.End
-                        )
-                    }
-                }
+                Text(
+                    text = referenceText,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.62f),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.End
+                )
             }
 
             Text(

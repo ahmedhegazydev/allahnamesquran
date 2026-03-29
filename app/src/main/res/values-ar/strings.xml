@@ -13,8 +13,7 @@
     <string name="ayahs_count">%1$d آيات</string>
     <string name="ayahs_section_title">الآيات التي ورد فيها الاسم</string>
     <string name="ayah_reference">%1$s • آية %2$d</string>
-    <string name="ayah_reference_with_details">%1$s • آية %2$d
-صفحة %3$d • جزء %4$d</string>
+    <string name="ayah_reference_with_details">%1$s • آية %2$d\nصفحة %3$d • جزء %4$d</string>
     <string name="onboarding_title">مرحبًا بك</string>
     <string name="onboarding_description">اختر اسمًا من أسماء الله الحسنى لتستكشف الآيات التي ورد فيها في القرآن الكريم</string>
     <string name="onboarding_feature_names_title">99 اسمًا من أسماء الله</string>
