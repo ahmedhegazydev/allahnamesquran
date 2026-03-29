@@ -273,7 +273,8 @@ private fun SignInHeroIcon() {
                             PrimaryGreen.copy(alpha = 0.9f)
                         )
                     )
-                ),
+                )
+                ,
             contentAlignment = Alignment.Center
         ) {
             Icon(
