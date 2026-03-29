@@ -65,7 +65,7 @@ fun NameCard(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = QuranFontFamily,
-                textAlign = TextAlign.End
+                textAlign = TextAlign.Start
             )
 
 

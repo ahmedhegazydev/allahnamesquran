@@ -6,7 +6,6 @@ import com.example.allahnamesquran.data.repository.QuranRepository
 import com.example.allahnamesquran.data.static.AllahNamesTranslations
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -14,8 +13,7 @@ class DetailsViewModel(
     private val repository: QuranRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(DetailsUiState())
-    val state: StateFlow<DetailsUiState> = _state.asStateFlow()
+    val state: StateFlow<DetailsUiState> field = MutableStateFlow(DetailsUiState())
 
     fun onIntent(intent: DetailsIntent) {
         when (intent) {
@@ -30,7 +28,7 @@ class DetailsViewModel(
             val name = repository.getAllahNameById(nameId)
             val ayahs = name?.let { repository.searchAyahsByAllahName(it.name) }.orEmpty()
 
-            _state.value = DetailsUiState(
+            state.value = DetailsUiState(
                 nameId = nameId,
                 name = name?.name.orEmpty(),
                 englishName = name?.let { AllahNamesTranslations.getEnglishName(it.id, it.name) }.orEmpty(),
@@ -53,13 +51,13 @@ class DetailsViewModel(
 
     private fun toggleFavorite() {
         viewModelScope.launch {
-            val current = _state.value
+            val current = state.value
             val nameId = current.nameId ?: return@launch
             val newFavoriteState = !current.isFavorite
 
             repository.setFavoriteName(nameId, newFavoriteState)
 
-            _state.update {
+            state.update {
                 it.copy(isFavorite = newFavoriteState)
             }
         }

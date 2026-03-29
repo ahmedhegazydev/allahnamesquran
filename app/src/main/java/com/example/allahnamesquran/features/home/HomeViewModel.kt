@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.allahnamesquran.data.repository.QuranRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -13,8 +12,8 @@ class HomeViewModel(
     private val repository: QuranRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeUiState())
-    val state: StateFlow<HomeUiState> = _state.asStateFlow()
+    val state: StateFlow<HomeUiState>
+    field = MutableStateFlow(HomeUiState())
 
     fun onIntent(intent: HomeIntent) {
         when (intent) {
@@ -26,10 +25,10 @@ class HomeViewModel(
     }
 
     private fun loadData() {
-        if (_state.value.names.isNotEmpty()) return
+        if (state.value.names.isNotEmpty()) return
 
         viewModelScope.launch {
-            _state.update {
+            state.update {
                 it.copy(isLoading = true, isEmpty = false)
             }
 
@@ -46,7 +45,7 @@ class HomeViewModel(
             }
 
             val visible = filterNames(allNames, HomeTab.ALL, "")
-            _state.update {
+            state.update {
                 it.copy(
                     names = allNames,
                     visibleNames = visible,
@@ -58,7 +57,7 @@ class HomeViewModel(
     }
 
     private fun updateSearch(query: String) {
-        _state.update { current ->
+        state.update { current ->
             val visible = filterNames(current.names, current.selectedTab, query)
             current.copy(
                 searchQuery = query,
@@ -69,7 +68,7 @@ class HomeViewModel(
     }
 
     private fun updateTab(tab: HomeTab) {
-        _state.update { current ->
+        state.update { current ->
             val visible = filterNames(current.names, tab, current.searchQuery)
             current.copy(
                 selectedTab = tab,
@@ -81,11 +80,11 @@ class HomeViewModel(
 
     private fun toggleFavorite(id: Int) {
         viewModelScope.launch {
-            val target = _state.value.names.firstOrNull { it.id == id } ?: return@launch
+            val target = state.value.names.firstOrNull { it.id == id } ?: return@launch
             val newFavoriteState = !target.isFavorite
             repository.setFavoriteName(id, newFavoriteState)
 
-            _state.update { current ->
+            state.update { current ->
                 val updatedNames = current.names.map {
                     if (it.id == id) it.copy(isFavorite = newFavoriteState) else it
                 }
