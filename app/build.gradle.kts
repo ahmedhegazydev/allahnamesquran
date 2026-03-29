@@ -25,11 +25,11 @@ fun quotedBuildConfigValue(name: String): String {
 }
 
 android {
-    namespace = "com.example.allahnamesquran"
+    namespace = "app.asmaquran.mobile"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.allahnamesquran"
+        applicationId = "app.asmaquran.mobile"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
