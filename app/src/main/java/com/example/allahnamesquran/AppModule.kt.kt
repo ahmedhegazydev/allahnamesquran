@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.example.allahnamesquran.data.local.AppDatabase
 import com.example.allahnamesquran.data.preferences.AppPreferences
 import com.example.allahnamesquran.data.remote.NetworkModule
+import com.example.allahnamesquran.data.remote.supabase.SupabaseProvider
 import com.example.allahnamesquran.data.repository.QuranRepository
 import com.example.allahnamesquran.data.repository.QuranRepositoryImpl
 import com.example.allahnamesquran.features.details.DetailsViewModel
@@ -31,6 +32,7 @@ val appModule = module {
     single { get<AppDatabase>().ayahDao() }
 
     single { AppPreferences(androidContext()) }
+    single { SupabaseProvider() }
 
     single<DailyNameReminderScheduler> {
         AndroidDailyNameReminderScheduler(androidContext())
