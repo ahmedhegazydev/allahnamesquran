@@ -11,6 +11,18 @@ data class NameUiModel(
     val isFavorite: Boolean
 )
 
+@Immutable
+data class DailyNameUiModel(
+    val id: Int,
+    val dateText: String,
+    val name: String,
+    val englishName: String,
+    val shortDescription: String,
+    val reflection: String,
+    val ayahText: String,
+    val ayahReference: String
+)
+
 enum class HomeTab {
     ALL,
     FAVORITES
@@ -22,6 +34,7 @@ data class HomeUiState(
     val selectedTab: HomeTab = HomeTab.ALL,
     val names: List<NameUiModel> = emptyList(),
     val visibleNames: List<NameUiModel> = emptyList(),
+    val dailyName: DailyNameUiModel? = null,
     val isLoading: Boolean = false,
     val isEmpty: Boolean = false
 )

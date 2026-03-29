@@ -44,11 +44,13 @@ class HomeViewModel(
                 )
             }
 
+            val dailyName = buildDailyName()
             val visible = filterNames(allNames, HomeTab.ALL, "")
             state.update {
                 it.copy(
                     names = allNames,
                     visibleNames = visible,
+                    dailyName = dailyName,
                     isEmpty = visible.isEmpty(),
                     isLoading = false
                 )
@@ -114,5 +116,15 @@ class HomeViewModel(
         return source.filter {
             it.name.contains(query)
         }
+    }
+
+    private suspend fun buildDailyName(): DailyNameUiModel? {
+        val dailyName = DailyNameFactory.getNameForDate(repository.getAllAllahNames()) ?: return null
+        val firstAyah = repository.searchAyahsByAllahName(dailyName.name).firstOrNull()
+
+        return DailyNameFactory.buildUiModel(
+            name = dailyName,
+            ayah = firstAyah
+        )
     }
 }

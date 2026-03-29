@@ -10,6 +10,8 @@ import com.example.allahnamesquran.features.details.DetailsViewModel
 import com.example.allahnamesquran.features.home.HomeViewModel
 import com.example.allahnamesquran.features.onboarding.OnboardingViewModel
 import com.example.allahnamesquran.features.splash.SplashViewModel
+import com.example.allahnamesquran.notifications.AndroidDailyNameReminderScheduler
+import com.example.allahnamesquran.notifications.DailyNameReminderScheduler
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -29,6 +31,10 @@ val appModule = module {
     single { get<AppDatabase>().ayahDao() }
 
     single { AppPreferences(androidContext()) }
+
+    single<DailyNameReminderScheduler> {
+        AndroidDailyNameReminderScheduler(androidContext())
+    }
 
     single<QuranRepository> {
         QuranRepositoryImpl(

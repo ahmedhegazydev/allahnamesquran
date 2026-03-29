@@ -24,6 +24,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,6 +38,7 @@ import com.example.allahnamesquran.core.ui.components.AsmaTabRow
 import com.example.allahnamesquran.core.ui.preview.PreviewFavoriteHomeUiState
 import com.example.allahnamesquran.core.ui.preview.PreviewHomeUiState
 import com.example.allahnamesquran.core.ui.preview.PreviewSurface
+import com.example.allahnamesquran.features.home.components.DailyNameCard
 import com.example.allahnamesquran.features.home.components.EmptyNamesState
 import com.example.allahnamesquran.features.home.components.HomeHeader
 import com.example.allahnamesquran.features.home.components.NameCard
@@ -49,18 +53,28 @@ private val HomeGridContentPadding = PaddingValues(
 
 @Composable
 fun HomeScreen(
+    initialNameId: Int? = null,
     onNameClick: (Int) -> Unit
 ) {
     val viewModel: HomeViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var hasConsumedInitialName by rememberSaveable(initialNameId) { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(HomeIntent.LoadData)
     }
 
+    LaunchedEffect(initialNameId, hasConsumedInitialName) {
+        if (initialNameId != null && !hasConsumedInitialName) {
+            hasConsumedInitialName = true
+            onNameClick(initialNameId)
+        }
+    }
+
     HomeScreenContent(
         state = state,
         onNameClick = onNameClick,
+        onDailyNameClick = onNameClick,
         onSearchChanged = { viewModel.onIntent(HomeIntent.SearchChanged(it)) },
         onTabSelected = { viewModel.onIntent(HomeIntent.TabSelected(it)) },
         onFavoriteClick = { viewModel.onIntent(HomeIntent.FavoriteClicked(it)) }
@@ -71,6 +85,7 @@ fun HomeScreen(
 private fun HomeScreenContent(
     state: HomeUiState,
     onNameClick: (Int) -> Unit,
+    onDailyNameClick: (Int) -> Unit,
     onSearchChanged: (String) -> Unit,
     onTabSelected: (HomeTab) -> Unit,
     onFavoriteClick: (Int) -> Unit
@@ -90,10 +105,18 @@ private fun HomeScreenContent(
             onSearchChanged = onSearchChanged
         )
 
+        state.dailyName?.let { dailyName ->
+            DailyNameCard(
+                item = dailyName,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                onClick = { onDailyNameClick(dailyName.id) }
+            )
+        }
+
         AsmaTabRow(
             selectedTab = state.selectedTab,
             onTabSelected = onTabSelected,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
         if (state.isLoading) {
@@ -209,6 +232,7 @@ private fun HomeScreenPreview() {
         HomeScreenContent(
             state = PreviewHomeUiState,
             onNameClick = {},
+            onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
             onFavoriteClick = {}
@@ -223,6 +247,7 @@ private fun HomeScreenFavoritesPreview() {
         HomeScreenContent(
             state = PreviewFavoriteHomeUiState,
             onNameClick = {},
+            onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
             onFavoriteClick = {}
@@ -237,6 +262,7 @@ private fun HomeScreenLoadingPreview() {
         HomeScreenContent(
             state = PreviewHomeUiState.copy(isLoading = true, visibleNames = emptyList()),
             onNameClick = {},
+            onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
             onFavoriteClick = {}
@@ -251,6 +277,7 @@ private fun HomeScreenEmptyPreview() {
         HomeScreenContent(
             state = PreviewHomeUiState.copy(visibleNames = emptyList(), isEmpty = true),
             onNameClick = {},
+            onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
             onFavoriteClick = {}

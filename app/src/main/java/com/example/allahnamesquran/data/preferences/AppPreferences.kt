@@ -17,6 +17,8 @@ class AppPreferences(
         private val KEY_ONBOARDING_SEEN = booleanPreferencesKey("onboarding_seen")
         private val KEY_QURAN_SYNCED = booleanPreferencesKey("quran_synced")
         private val KEY_FAVORITE_NAME_IDS = stringSetPreferencesKey("favorite_name_ids")
+        private val KEY_NOTIFICATIONS_PERMISSION_REQUESTED =
+            booleanPreferencesKey("notifications_permission_requested")
     }
 
     val onboardingSeen: Flow<Boolean> = context.dataStore.data.map {
@@ -32,6 +34,10 @@ class AppPreferences(
             ?.mapNotNull { it.toIntOrNull() }
             ?.toSet()
             ?: emptySet()
+    }
+
+    val notificationsPermissionRequested: Flow<Boolean> = context.dataStore.data.map {
+        it[KEY_NOTIFICATIONS_PERMISSION_REQUESTED] ?: false
     }
 
     suspend fun setOnboardingSeen(value: Boolean) {
@@ -58,6 +64,12 @@ class AppPreferences(
             }
 
             prefs[KEY_FAVORITE_NAME_IDS] = current
+        }
+    }
+
+    suspend fun setNotificationsPermissionRequested(value: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_NOTIFICATIONS_PERMISSION_REQUESTED] = value
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.example.allahnamesquran.core.ui.theme.AllahNamesQuranTheme
 import com.example.allahnamesquran.features.details.AyahUiModel
 import com.example.allahnamesquran.features.details.DetailsUiState
+import com.example.allahnamesquran.features.home.DailyNameUiModel
 import com.example.allahnamesquran.features.home.HomeTab
 import com.example.allahnamesquran.features.home.HomeUiState
 import com.example.allahnamesquran.features.home.NameUiModel
@@ -70,6 +71,16 @@ val PreviewHomeUiState = HomeUiState(
     selectedTab = HomeTab.ALL,
     names = PreviewNameItems,
     visibleNames = PreviewNameItems,
+    dailyName = DailyNameUiModel(
+        id = 3,
+        dateText = "الأحد، 29 مارس 2026",
+        name = "العَلِيمُ",
+        englishName = "Al-Alim",
+        shortDescription = "العالم بكل شيء، لا يخفى عليه ظاهر ولا باطن، ولا يغيب عن علمه شيء.",
+        reflection = "العالم بما كان وما يكون وما لم يكن لو كان كيف يكون.",
+        ayahText = "إِنَّ اللَّهَ كَانَ عَلِيمًا حَكِيمًا",
+        ayahReference = "النساء - آية 11"
+    ),
     isLoading = false,
     isEmpty = false
 )

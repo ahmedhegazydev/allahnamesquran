@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.allahnamesquran.data.local.dao.AyahDao
 import com.example.allahnamesquran.data.local.entity.AyahEntity
 
-@Database(entities = [AyahEntity::class], version = 1)
+@Database(entities = [AyahEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun ayahDao(): AyahDao
 }

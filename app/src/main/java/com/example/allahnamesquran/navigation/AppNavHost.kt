@@ -16,13 +16,17 @@ import com.example.allahnamesquran.features.home.HomeScreen
 import com.example.allahnamesquran.features.onboarding.OnboardingScreen
 import com.example.allahnamesquran.features.splash.SplashScreen
 import com.example.allahnamesquran.features.splash.SplashViewModel
+import com.example.allahnamesquran.notifications.DailyNameReminderScheduler
 import com.example.allahnamesquran.data.repository.QuranRepository
 import org.koin.compose.KoinApplication
+import org.koin.core.KoinApplication
+import org.koin.dsl.koinConfiguration
 import org.koin.dsl.module
 
 @Composable
 fun AppNavHost(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    dailyNameIdFromNotification: Int? = null
 ) {
     // NavHostController is unstable, so we keep it local to AppNavHost
     // This makes AppNavHost itself stable and skippable.
@@ -60,6 +64,7 @@ fun AppNavHost(
 
         composable(AppRoute.Home.route) {
             HomeScreen(
+                initialNameId = dailyNameIdFromNotification,
                 onNameClick = { nameId ->
                     navController.navigate(AppRoute.Details.create(nameId))
                 }
@@ -87,7 +92,7 @@ fun AppNavHost(
 @Preview(showBackground = true)
 @Composable
 fun AppNavHostPreview() {
-    KoinApplication(application = {
+    KoinApplication(configuration = koinConfiguration(declaration = {
         modules(module {
             single<QuranRepository> {
                 object : QuranRepository {
@@ -106,14 +111,20 @@ fun AppNavHostPreview() {
                     ) {
                     }
 
-                    override suspend fun searchAyahsByAllahName(name: String): List<AyahSearchResult> = emptyList()
+                    override suspend fun searchAyahsByAllahName(name: String): List<AyahSearchResult> =
+                        emptyList()
                 }
             }
-            factory { SplashViewModel(get()) }
+            single<DailyNameReminderScheduler> {
+                object : DailyNameReminderScheduler {
+                    override fun scheduleDailyReminder() = Unit
+                }
+            }
+            factory { SplashViewModel(get(), get()) }
         })
-    }) {
+    }), content = {
         AllahNamesQuranTheme {
             AppNavHost()
         }
-    }
+    })
 }

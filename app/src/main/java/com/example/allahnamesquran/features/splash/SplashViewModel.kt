@@ -3,12 +3,14 @@ package com.example.allahnamesquran.features.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.allahnamesquran.data.repository.QuranRepository
+import com.example.allahnamesquran.notifications.DailyNameReminderScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
-    private val repository: QuranRepository
+    private val repository: QuranRepository,
+    private val dailyNameReminderScheduler: DailyNameReminderScheduler
 ) : ViewModel() {
 
     val state: StateFlow<SplashUiState> field = MutableStateFlow(SplashUiState())
@@ -25,6 +27,7 @@ class SplashViewModel(
         viewModelScope.launch {
             try {
                 repository.syncQuranIfNeeded()
+                dailyNameReminderScheduler.scheduleDailyReminder()
                 val onboardingSeen = repository.isOnboardingSeen()
 
                 state.value = SplashUiState(

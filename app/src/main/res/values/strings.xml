@@ -23,4 +23,7 @@
     <string name="onboarding_feature_favorites_title">Save favorites</string>
     <string name="onboarding_feature_favorites_subtitle">Keep your preferred names close for quick access</string>
     <string name="onboarding_start">Get Started Now</string>
+    <string name="daily_name_notification_channel_name">Daily Name</string>
+    <string name="daily_name_notification_channel_description">Daily reminders for Allah’s beautiful names</string>
+    <string name="daily_name_notification_title">Today’s Name: %1$s</string>
 </resources>
