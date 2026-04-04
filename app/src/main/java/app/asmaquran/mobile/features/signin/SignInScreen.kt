@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Login
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.Login
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -228,7 +227,7 @@ private fun SignInScreenContent(
                             fontSize = 20.sp
                         )
                         Icon(
-                            imageVector = Icons.Rounded.Login,
+                            imageVector = Icons.AutoMirrored.Rounded.Login,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                             modifier = Modifier.size(18.dp)
@@ -322,7 +321,7 @@ private fun SignInBenefitRow(text: String) {
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.82f),
             fontFamily = QuranFontFamily,
             fontSize = 18.sp,
-            textAlign = TextAlign.Right,
+            textAlign = TextAlign.Start,
             modifier = Modifier.weight(1f)
         )
     }

@@ -160,18 +160,18 @@ private fun OnboardingScreenContent(
                         subtitle = stringResource(R.string.onboarding_feature_search_subtitle)
                     )
 
-                    OnboardingFeatureItem(
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Rounded.FavoriteBorder,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(26.dp)
-                            )
-                        },
-                        title = stringResource(R.string.onboarding_feature_favorites_title),
-                        subtitle = stringResource(R.string.onboarding_feature_favorites_subtitle)
-                    )
+//                    OnboardingFeatureItem(
+//                        icon = {
+//                            Icon(
+//                                imageVector = Icons.Rounded.FavoriteBorder,
+//                                contentDescription = null,
+//                                tint = MaterialTheme.colorScheme.primary,
+//                                modifier = Modifier.size(26.dp)
+//                            )
+//                        },
+//                        title = stringResource(R.string.onboarding_feature_favorites_title),
+//                        subtitle = stringResource(R.string.onboarding_feature_favorites_subtitle)
+//                    )
                 }
             }
 
@@ -242,7 +242,7 @@ private fun OnboardingFeatureItem(
                 fontWeight = FontWeight.Bold,
                 fontFamily = QuranFontFamily,
                 color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Right,
+                textAlign = TextAlign.Start,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
@@ -250,7 +250,7 @@ private fun OnboardingFeatureItem(
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.72f),
                 fontFamily = QuranFontFamily,
-                textAlign = TextAlign.Right,
+                textAlign = TextAlign.Start,
                 modifier = Modifier.fillMaxWidth()
             )
         }
