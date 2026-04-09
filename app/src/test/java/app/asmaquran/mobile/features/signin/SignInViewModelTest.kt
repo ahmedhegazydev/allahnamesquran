@@ -2,6 +2,7 @@ package app.asmaquran.mobile.features.signin
 
 import android.app.Activity
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.data.auth.AuthProviderType
 import app.asmaquran.mobile.data.auth.AuthSignInResult
 import app.asmaquran.mobile.testutil.FakeAuthRepository
 import app.asmaquran.mobile.testutil.MainDispatcherRule

@@ -1,52 +1,76 @@
 package app.asmaquran.mobile.features.settings
 
+import android.app.Activity
 import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.asmaquran.mobile.BuildConfig
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.components.GithubProviderMark
+import app.asmaquran.mobile.core.ui.components.GoogleProviderMark
 import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
 import app.asmaquran.mobile.core.ui.theme.AppBackground
-import app.asmaquran.mobile.features.settings.components.AccountSettingsSection
+import app.asmaquran.mobile.core.ui.theme.QuranFontFamily
 import app.asmaquran.mobile.features.settings.components.AppearanceSettingsSection
+import app.asmaquran.mobile.features.settings.components.AccountSettingsSection
 import app.asmaquran.mobile.features.settings.components.DataSettingsSection
 import app.asmaquran.mobile.features.settings.components.GeneralSettingsSection
 import app.asmaquran.mobile.features.settings.components.LanguageSettingsSection
 import app.asmaquran.mobile.features.settings.components.NotificationsSettingsSection
 import app.asmaquran.mobile.features.settings.components.SettingsHeader
+import app.asmaquran.mobile.data.auth.AuthProviderType
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit,
-    onSignInClick: () -> Unit,
     onReplayOnboarding: () -> Unit,
     onResetApp: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val activity = context.findActivity()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(viewModel) {
         viewModel.navigationEvents.collect { event ->
@@ -57,10 +81,31 @@ fun SettingsScreen(
         }
     }
 
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.refreshAccount()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     SettingsScreenContent(
         state = state,
         onBackClick = onBackClick,
-        onSignInClick = onSignInClick,
+        onOpenSignInDialog = {
+            viewModel.onIntent(SettingsIntent.SignInClicked)
+        },
+        onDismissSignInDialog = {
+            viewModel.onIntent(SettingsIntent.SignInDialogDismissed)
+        },
+        onGoogleSignInClick = {
+            activity?.let(viewModel::signInWithGoogle)
+        },
+        onGithubSignInClick = viewModel::signInWithGithub,
         onNotificationsEnabledChange = {
             viewModel.onIntent(SettingsIntent.NotificationsToggled(it))
         },
@@ -125,7 +170,10 @@ fun SettingsScreen(
 private fun SettingsScreenContent(
     state: SettingsUiState,
     onBackClick: () -> Unit,
-    onSignInClick: () -> Unit,
+    onOpenSignInDialog: () -> Unit,
+    onDismissSignInDialog: () -> Unit,
+    onGoogleSignInClick: () -> Unit,
+    onGithubSignInClick: () -> Unit,
     onNotificationsEnabledChange: (Boolean) -> Unit,
     onReminderTimeClick: () -> Unit,
     onLanguageSelected: (SettingsLanguageOption) -> Unit,
@@ -158,7 +206,7 @@ private fun SettingsScreenContent(
         item {
             AccountSettingsSection(
                 account = state.account,
-                onSignInClick = onSignInClick
+                onSignInClick = onOpenSignInDialog
             )
         }
 
@@ -241,6 +289,135 @@ private fun SettingsScreenContent(
             onConfirm = onConfirmResetApp,
             isDanger = true
         )
+    }
+
+    if (state.showSignInDialog) {
+        SettingsSignInDialog(
+            state = state,
+            onDismiss = onDismissSignInDialog,
+            onGoogleClick = onGoogleSignInClick,
+            onGithubClick = onGithubSignInClick
+        )
+    }
+}
+
+@Composable
+private fun SettingsSignInDialog(
+    state: SettingsUiState,
+    onDismiss: () -> Unit,
+    onGoogleClick: () -> Unit,
+    onGithubClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {
+            if (!state.isAuthLoading) {
+                onDismiss()
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.settings_sign_in_dialog_title),
+                style = MaterialTheme.typography.titleLarge,
+                fontFamily = QuranFontFamily
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Text(
+                    text = stringResource(R.string.settings_sign_in_dialog_message),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontFamily = QuranFontFamily,
+                    lineHeight = 24.sp
+                )
+
+                SettingsAuthButton(
+                    text = stringResource(R.string.sign_in_google_cta),
+                    loading = state.loadingProvider == AuthProviderType.GOOGLE,
+                    enabled = !state.isAuthLoading,
+                    containerColor = Color.White,
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    onClick = onGoogleClick,
+                    icon = {
+                        GoogleProviderMark(modifier = Modifier.size(20.dp))
+                    }
+                )
+
+                SettingsAuthButton(
+                    text = stringResource(R.string.sign_in_github_cta),
+                    loading = state.loadingProvider == AuthProviderType.GITHUB,
+                    enabled = !state.isAuthLoading,
+                    containerColor = Color.White,
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                    onClick = onGithubClick,
+                    icon = {
+                        GithubProviderMark(
+                            modifier = Modifier.size(20.dp),
+                            iconTint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                )
+
+                state.authErrorMessageRes?.let { messageRes ->
+                    Text(
+                        text = stringResource(messageRes),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontFamily = QuranFontFamily
+                    )
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = !state.isAuthLoading
+            ) {
+                Text(text = stringResource(R.string.settings_dialog_cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun SettingsAuthButton(
+    text: String,
+    loading: Boolean,
+    enabled: Boolean,
+    containerColor: Color,
+    contentColor: Color,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(58.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        )
+    ) {
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = contentColor
+            )
+        } else {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    text = text,
+                    fontFamily = QuranFontFamily
+                )
+                icon()
+            }
+        }
     }
 }
 
@@ -379,6 +556,14 @@ private fun rateApp(context: Context) {
     }
 }
 
+private fun Context.findActivity(): Activity? {
+    return when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> null
+    }
+}
+
 @AppScreenPreviews
 @Composable
 private fun SettingsScreenPreview() {
@@ -394,7 +579,10 @@ private fun SettingsScreenPreview() {
                 account = SettingsAccountUiModel()
             ),
             onBackClick = {},
-            onSignInClick = {},
+            onOpenSignInDialog = {},
+            onDismissSignInDialog = {},
+            onGoogleSignInClick = {},
+            onGithubSignInClick = {},
             onNotificationsEnabledChange = {},
             onReminderTimeClick = {},
             onLanguageSelected = {},

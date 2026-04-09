@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.data.auth.AuthProviderType
 import app.asmaquran.mobile.data.auth.AuthRepository
 import app.asmaquran.mobile.data.auth.AuthSignInResult
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,7 +27,7 @@ class SignInViewModel(
 
         viewModelScope.launch {
             state.value = state.value.copy(
-                loadingProvider = SignInProvider.GOOGLE,
+                loadingProvider = AuthProviderType.GOOGLE,
                 errorMessageRes = null
             )
 
@@ -64,7 +65,7 @@ class SignInViewModel(
 
         viewModelScope.launch {
             state.value = state.value.copy(
-                loadingProvider = SignInProvider.GITHUB,
+                loadingProvider = AuthProviderType.GITHUB,
                 errorMessageRes = null
             )
 

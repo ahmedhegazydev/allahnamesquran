@@ -1,8 +1,12 @@
 package app.asmaquran.mobile.features.settings
 
+import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.asmaquran.mobile.R
+import app.asmaquran.mobile.data.auth.AuthProviderType
 import app.asmaquran.mobile.data.auth.AuthRepository
+import app.asmaquran.mobile.data.auth.AuthSignInResult
 import app.asmaquran.mobile.data.preferences.SettingsPreferencesStore
 import app.asmaquran.mobile.notifications.DailyNameReminderScheduler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,11 +31,26 @@ class SettingsViewModel(
 
     init {
         observeSettings()
-        loadAccount()
+        refreshAccount()
     }
 
     fun onIntent(intent: SettingsIntent) {
         when (intent) {
+            SettingsIntent.SignInClicked -> {
+                state.value = state.value.copy(
+                    showSignInDialog = true,
+                    authErrorMessageRes = null
+                )
+            }
+
+            SettingsIntent.SignInDialogDismissed -> {
+                if (state.value.isAuthLoading) return
+                state.value = state.value.copy(
+                    showSignInDialog = false,
+                    authErrorMessageRes = null
+                )
+            }
+
             SettingsIntent.AboutAppClicked -> {
                 state.value = state.value.copy(showAboutDialog = true)
             }
@@ -99,6 +118,92 @@ class SettingsViewModel(
         }
     }
 
+    fun signInWithGoogle(activity: Activity) {
+        if (state.value.isAuthLoading) return
+
+        viewModelScope.launch {
+            state.update { current ->
+                current.copy(
+                    loadingProvider = AuthProviderType.GOOGLE,
+                    authErrorMessageRes = null
+                )
+            }
+
+            when (authRepository.signInWithGoogle(activity)) {
+                AuthSignInResult.Success -> {
+                    updateAccountState()
+                    clearAuthState(closeDialog = true)
+                }
+
+                AuthSignInResult.Started -> {
+                    clearAuthState(closeDialog = true)
+                }
+
+                AuthSignInResult.Cancelled -> {
+                    setAuthError(R.string.sign_in_error_cancelled)
+                }
+
+                AuthSignInResult.NotConfigured -> {
+                    setAuthError(R.string.sign_in_error_not_configured)
+                }
+
+                AuthSignInResult.NoToken -> {
+                    setAuthError(R.string.sign_in_error_google_token)
+                }
+
+                is AuthSignInResult.Failure -> {
+                    setAuthError(R.string.sign_in_error_generic)
+                }
+            }
+        }
+    }
+
+    fun signInWithGithub() {
+        if (state.value.isAuthLoading) return
+
+        viewModelScope.launch {
+            state.update { current ->
+                current.copy(
+                    loadingProvider = AuthProviderType.GITHUB,
+                    authErrorMessageRes = null
+                )
+            }
+
+            when (authRepository.signInWithGithub()) {
+                AuthSignInResult.Success -> {
+                    updateAccountState()
+                    clearAuthState(closeDialog = true)
+                }
+
+                AuthSignInResult.Started -> {
+                    clearAuthState(closeDialog = true)
+                }
+
+                AuthSignInResult.Cancelled -> {
+                    setAuthError(R.string.sign_in_error_cancelled)
+                }
+
+                AuthSignInResult.NotConfigured -> {
+                    setAuthError(R.string.sign_in_error_not_configured)
+                }
+
+                AuthSignInResult.NoToken -> {
+                    setAuthError(R.string.sign_in_error_generic)
+                }
+
+                is AuthSignInResult.Failure -> {
+                    setAuthError(R.string.sign_in_error_generic)
+                }
+            }
+        }
+    }
+
+    fun refreshAccount() {
+        viewModelScope.launch {
+            updateAccountState()
+        }
+    }
+
     private fun observeSettings() {
         viewModelScope.launch {
             combine(
@@ -130,18 +235,20 @@ class SettingsViewModel(
         }
     }
 
-    private fun loadAccount() {
-        viewModelScope.launch {
-            val profile = authRepository.getCurrentUserProfile()
-            state.update { current ->
-                current.copy(
-                    account = SettingsAccountUiModel(
-                        isSignedIn = profile != null,
-                        displayName = profile?.displayName,
-                        email = profile?.email
-                    )
-                )
-            }
+    private suspend fun updateAccountState() {
+        val profile = authRepository.getCurrentUserProfile()
+        state.update { current ->
+            current.copy(
+                account = SettingsAccountUiModel(
+                    isSignedIn = profile != null,
+                    displayName = profile?.displayName,
+                    email = profile?.email,
+                    provider = profile?.provider
+                ),
+                showSignInDialog = if (profile != null) false else current.showSignInDialog,
+                loadingProvider = if (profile != null) null else current.loadingProvider,
+                authErrorMessageRes = if (profile != null) null else current.authErrorMessageRes
+            )
         }
     }
 
@@ -190,10 +297,32 @@ class SettingsViewModel(
                     showResetAppDialog = false,
                     showAboutDialog = false,
                     showPrivacyDialog = false,
+                    showSignInDialog = false,
+                    loadingProvider = null,
+                    authErrorMessageRes = null,
                     account = SettingsAccountUiModel()
                 )
             }
             _navigationEvents.emit(SettingsNavigationEvent.ResetApp)
+        }
+    }
+
+    private fun clearAuthState(closeDialog: Boolean) {
+        state.update { current ->
+            current.copy(
+                showSignInDialog = if (closeDialog) false else current.showSignInDialog,
+                loadingProvider = null,
+                authErrorMessageRes = null
+            )
+        }
+    }
+
+    private fun setAuthError(@androidx.annotation.StringRes messageRes: Int) {
+        state.update { current ->
+            current.copy(
+                loadingProvider = null,
+                authErrorMessageRes = messageRes
+            )
         }
     }
 }

@@ -119,9 +119,6 @@ fun AppNavHost(
                 onBackClick = {
                     navController.popBackStack()
                 },
-                onSignInClick = {
-                    navController.navigate(AppRoute.SignIn.route)
-                },
                 onReplayOnboarding = {
                     navController.navigate(AppRoute.Onboarding.route) {
                         popUpTo(AppRoute.Settings.route) { inclusive = true }

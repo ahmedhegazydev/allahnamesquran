@@ -12,9 +12,25 @@ interface AuthRepository {
     suspend fun signOut()
 }
 
+enum class AuthProviderType(
+    val value: String
+) {
+    GOOGLE("google"),
+    GITHUB("github");
+
+    companion object {
+        fun fromSupabaseValue(value: String?): AuthProviderType? {
+            return entries.firstOrNull { provider ->
+                provider.value.equals(value, ignoreCase = true)
+            }
+        }
+    }
+}
+
 data class AuthUserProfile(
     val displayName: String?,
-    val email: String?
+    val email: String?,
+    val provider: AuthProviderType? = null
 )
 
 sealed interface AuthSignInResult {

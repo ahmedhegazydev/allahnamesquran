@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import app.asmaquran.mobile.R
 import app.asmaquran.mobile.core.ui.theme.PrimaryGreen
 import app.asmaquran.mobile.core.ui.theme.QuranFontFamily
+import app.asmaquran.mobile.data.auth.AuthProviderType
 
 @Composable
 fun AccountGuestRow() {
@@ -76,8 +77,21 @@ fun AccountGuestRow() {
 @Composable
 fun AccountSignedInRow(
     displayName: String,
-    email: String?
+    email: String?,
+    provider: AuthProviderType?
 ) {
+    val providerLabel = when (provider) {
+        AuthProviderType.GOOGLE -> stringResource(R.string.settings_provider_google)
+        AuthProviderType.GITHUB -> stringResource(R.string.settings_provider_github)
+        null -> null
+    }
+    val subtitle = when {
+        !email.isNullOrBlank() && providerLabel != null -> "$email • $providerLabel"
+        !email.isNullOrBlank() -> email
+        providerLabel != null -> stringResource(R.string.settings_signed_in_with_provider, providerLabel)
+        else -> stringResource(R.string.settings_signed_in_subtitle)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,7 +117,7 @@ fun AccountSignedInRow(
                 textAlign = TextAlign.End
             )
             Text(
-                text = email ?: stringResource(R.string.settings_signed_in_subtitle),
+                text = subtitle,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.58f),
                 fontFamily = QuranFontFamily,
                 fontSize = 16.sp,

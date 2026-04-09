@@ -34,10 +34,23 @@ class SupabaseAuthManager(
         val displayName = metadata?.get("full_name")?.jsonPrimitive?.contentOrNull
             ?: metadata?.get("name")?.jsonPrimitive?.contentOrNull
             ?: user.email?.substringBefore('@')
+        val provider = user.identities.orEmpty()
+            .asSequence()
+            .mapNotNull { identity ->
+                AuthProviderType.fromSupabaseValue(identity.provider)
+            }
+            .firstOrNull()
+            ?: AuthProviderType.fromSupabaseValue(
+                metadata?.get("provider")?.jsonPrimitive?.contentOrNull
+            )
+            ?: AuthProviderType.fromSupabaseValue(
+                user.appMetadata?.get("provider")?.jsonPrimitive?.contentOrNull
+            )
 
         return AuthUserProfile(
             displayName = displayName,
-            email = user.email
+            email = user.email,
+            provider = provider
         )
     }
 

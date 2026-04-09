@@ -43,7 +43,13 @@
     <string name="settings_guest_title">مستخدم ضيف</string>
     <string name="settings_guest_subtitle">سجل دخولك لحفظ بياناتك</string>
     <string name="settings_signed_in_subtitle">تم تسجيل الدخول</string>
+    <string name="settings_signed_in_with_provider">تم تسجيل الدخول عبر %1$s</string>
+    <string name="settings_provider_google">Google</string>
+    <string name="settings_provider_github">GitHub</string>
+    <string name="settings_sign_in">تسجيل الدخول</string>
     <string name="settings_sign_in_google">تسجيل الدخول</string>
+    <string name="settings_sign_in_dialog_title">اختر طريقة تسجيل الدخول</string>
+    <string name="settings_sign_in_dialog_message">سجّل عبر Google أو GitHub لربط المفضلة بحسابك والرجوع إليها لاحقًا.</string>
     <string name="settings_notifications_section">الإشعارات</string>
     <string name="settings_daily_name_reminder_title">تذكير اسم اليوم</string>
     <string name="settings_daily_name_reminder_subtitle">استلم إشعار يومي</string>

@@ -43,7 +43,13 @@
     <string name="settings_guest_title">Guest user</string>
     <string name="settings_guest_subtitle">Sign in to save your data</string>
     <string name="settings_signed_in_subtitle">Signed in</string>
+    <string name="settings_signed_in_with_provider">Signed in with %1$s</string>
+    <string name="settings_provider_google">Google</string>
+    <string name="settings_provider_github">GitHub</string>
+    <string name="settings_sign_in">Sign in</string>
     <string name="settings_sign_in_google">Sign in</string>
+    <string name="settings_sign_in_dialog_title">Choose a sign-in method</string>
+    <string name="settings_sign_in_dialog_message">Sign in with Google or GitHub to keep your favorites tied to your account.</string>
     <string name="settings_notifications_section">Notifications</string>
     <string name="settings_daily_name_reminder_title">Daily name reminder</string>
     <string name="settings_daily_name_reminder_subtitle">Receive a daily notification</string>

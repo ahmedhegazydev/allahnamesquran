@@ -3,7 +3,6 @@ package app.asmaquran.mobile.features.signin
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Login
-import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,12 +36,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,11 +49,14 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.components.GithubProviderMark
+import app.asmaquran.mobile.core.ui.components.GoogleProviderMark
 import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
 import app.asmaquran.mobile.core.ui.theme.GoldAccent
 import app.asmaquran.mobile.core.ui.theme.PrimaryGreen
 import app.asmaquran.mobile.core.ui.theme.QuranFontFamily
+import app.asmaquran.mobile.data.auth.AuthProviderType
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
@@ -205,7 +202,7 @@ private fun SignInScreenContent(
                     ),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp)
                 ) {
-                    if (state.isLoading) {
+                    if (state.loadingProvider == AuthProviderType.GOOGLE) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(22.dp),
                             strokeWidth = 2.5.dp,
@@ -223,7 +220,7 @@ private fun SignInScreenContent(
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 20.sp
                             )
-                            GoogleMark(modifier = Modifier.size(22.dp))
+                            GoogleProviderMark(modifier = Modifier.size(22.dp))
                         }
                     }
                 }
@@ -236,16 +233,16 @@ private fun SignInScreenContent(
                         .height(72.dp),
                     shape = RoundedCornerShape(22.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF111827),
-                        contentColor = Color.White
+                        containerColor = Color.White,
+                        contentColor = MaterialTheme.colorScheme.onBackground
                     ),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp)
                 ) {
-                    if (state.loadingProvider == SignInProvider.GITHUB) {
+                    if (state.loadingProvider == AuthProviderType.GITHUB) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(22.dp),
                             strokeWidth = 2.5.dp,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     } else {
                         Row(
@@ -254,12 +251,15 @@ private fun SignInScreenContent(
                         ) {
                             Text(
                                 text = stringResource(R.string.sign_in_github_cta),
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 fontFamily = QuranFontFamily,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 20.sp
                             )
-                            GithubMark()
+                            GithubProviderMark(
+                                modifier = Modifier.size(22.dp),
+                                iconTint = MaterialTheme.colorScheme.onBackground
+                            )
                         }
                     }
                 }
@@ -387,60 +387,6 @@ private fun SignInBenefitRow(text: String) {
     }
 }
 
-@Composable
-private fun GoogleMark(modifier: Modifier = Modifier) {
-    Canvas(modifier = modifier) {
-        val stroke = size.minDimension * 0.18f
-        val inset = stroke / 2
-        val arcSize = Size(size.width - stroke, size.height - stroke)
-        val topLeft = Offset(inset, inset)
-
-        drawArc(
-            color = Color(0xFFEA4335),
-            startAngle = 205f,
-            sweepAngle = 78f,
-            useCenter = false,
-            topLeft = topLeft,
-            size = arcSize,
-            style = Stroke(width = stroke, cap = StrokeCap.Round)
-        )
-        drawArc(
-            color = Color(0xFFFBBC05),
-            startAngle = 128f,
-            sweepAngle = 77f,
-            useCenter = false,
-            topLeft = topLeft,
-            size = arcSize,
-            style = Stroke(width = stroke, cap = StrokeCap.Round)
-        )
-        drawArc(
-            color = Color(0xFF34A853),
-            startAngle = 52f,
-            sweepAngle = 76f,
-            useCenter = false,
-            topLeft = topLeft,
-            size = arcSize,
-            style = Stroke(width = stroke, cap = StrokeCap.Round)
-        )
-        drawArc(
-            color = Color(0xFF4285F4),
-            startAngle = -28f,
-            sweepAngle = 92f,
-            useCenter = false,
-            topLeft = topLeft,
-            size = arcSize,
-            style = Stroke(width = stroke, cap = StrokeCap.Round)
-        )
-        drawLine(
-            color = Color(0xFF4285F4),
-            start = Offset(size.width * 0.54f, size.height * 0.51f),
-            end = Offset(size.width * 0.92f, size.height * 0.51f),
-            strokeWidth = stroke,
-            cap = StrokeCap.Round
-        )
-    }
-}
-
 private fun Context.findActivity(): Activity? {
     return when (this) {
         is Activity -> this
@@ -459,23 +405,5 @@ private fun SignInScreenPreview() {
             onGithubClick = {},
             onSkipClick = {}
         )
-    }
-}
-
-@Composable
-private fun GithubMark() {
-    Surface(
-        modifier = Modifier.size(24.dp),
-        shape = CircleShape,
-        color = Color.White.copy(alpha = 0.12f)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = Icons.Rounded.Code,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(16.dp)
-            )
-        }
     }
 }

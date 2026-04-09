@@ -1,5 +1,8 @@
 package app.asmaquran.mobile.features.settings
 
+import android.app.Activity
+import app.asmaquran.mobile.R
+import app.asmaquran.mobile.data.auth.AuthProviderType
 import app.asmaquran.mobile.data.auth.AuthUserProfile
 import app.asmaquran.mobile.testutil.FakeAuthRepository
 import app.asmaquran.mobile.testutil.FakeDailyNameReminderScheduler
@@ -16,6 +19,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
@@ -42,7 +46,8 @@ class SettingsViewModelTest {
         preferences.setSelectedAppearanceMode(SettingsAppearanceOption.DARK.storageValue)
         authRepository.currentUserProfile = AuthUserProfile(
             displayName = "Ahmed",
-            email = "ahmed@example.com"
+            email = "ahmed@example.com",
+            provider = AuthProviderType.GITHUB
         )
 
         val viewModel = SettingsViewModel(preferences, authRepository, scheduler)
@@ -58,7 +63,58 @@ class SettingsViewModelTest {
             assertTrue(account.isSignedIn)
             assertEquals("Ahmed", account.displayName)
             assertEquals("ahmed@example.com", account.email)
+            assertEquals(AuthProviderType.GITHUB, account.provider)
         }
+    }
+
+    @Test
+    fun `sign in dialog opens and dismisses from account section`() = runTest {
+        val viewModel = SettingsViewModel(preferences, authRepository, scheduler)
+        advanceUntilIdle()
+
+        viewModel.onIntent(SettingsIntent.SignInClicked)
+        assertTrue(viewModel.state.value.showSignInDialog)
+
+        viewModel.onIntent(SettingsIntent.SignInDialogDismissed)
+        assertFalse(viewModel.state.value.showSignInDialog)
+    }
+
+    @Test
+    fun `google sign in updates account and closes dialog on success`() = runTest {
+        authRepository.googleSignInResult = app.asmaquran.mobile.data.auth.AuthSignInResult.Success
+        authRepository.profileAfterGoogleSignIn = AuthUserProfile(
+            displayName = "Ahmed",
+            email = "ahmed@example.com",
+            provider = AuthProviderType.GOOGLE
+        )
+        val viewModel = SettingsViewModel(preferences, authRepository, scheduler)
+        advanceUntilIdle()
+        val activity = mock(Activity::class.java)
+
+        viewModel.onIntent(SettingsIntent.SignInClicked)
+        viewModel.signInWithGoogle(activity)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.state.value.showSignInDialog)
+        assertFalse(viewModel.state.value.isAuthLoading)
+        assertTrue(viewModel.state.value.account.isSignedIn)
+        assertEquals(AuthProviderType.GOOGLE, viewModel.state.value.account.provider)
+        assertEquals(1, authRepository.googleSignInCalls)
+    }
+
+    @Test
+    fun `github sign in closes dialog when browser flow starts`() = runTest {
+        authRepository.githubSignInResult = app.asmaquran.mobile.data.auth.AuthSignInResult.Started
+        val viewModel = SettingsViewModel(preferences, authRepository, scheduler)
+        advanceUntilIdle()
+
+        viewModel.onIntent(SettingsIntent.SignInClicked)
+        viewModel.signInWithGithub()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.state.value.showSignInDialog)
+        assertFalse(viewModel.state.value.isAuthLoading)
+        assertEquals(1, authRepository.githubSignInCalls)
     }
 
     @Test

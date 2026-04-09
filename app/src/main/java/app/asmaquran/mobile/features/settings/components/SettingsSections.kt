@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Login
 import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.rounded.DeleteOutline
 import androidx.compose.material.icons.rounded.Info
@@ -54,7 +54,8 @@ fun AccountSettingsSection(
         if (account.isSignedIn) {
             AccountSignedInRow(
                 displayName = account.displayName.orEmpty(),
-                email = account.email
+                email = account.email,
+                provider = account.provider
             )
         } else {
             AccountGuestRow()
@@ -72,14 +73,14 @@ fun AccountSettingsSection(
                 )
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Rounded.Login,
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(22.dp)
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = stringResource(R.string.settings_sign_in_google),
+                    text = stringResource(R.string.settings_sign_in),
                     fontFamily = QuranFontFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp

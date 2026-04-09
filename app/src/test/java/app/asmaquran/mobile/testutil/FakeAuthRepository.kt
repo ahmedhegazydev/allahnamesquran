@@ -17,6 +17,8 @@ class FakeAuthRepository : AuthRepository {
     var githubSignInCalls = 0
     var signOutCalls = 0
     var lastActivity: Activity? = null
+    var profileAfterGoogleSignIn: AuthUserProfile? = null
+    var profileAfterGithubSignIn: AuthUserProfile? = null
 
     override suspend fun hasActiveSession(): Boolean = hasActiveSession
 
@@ -32,11 +34,19 @@ class FakeAuthRepository : AuthRepository {
     override suspend fun signInWithGoogle(activity: Activity): AuthSignInResult {
         googleSignInCalls++
         lastActivity = activity
+        if (googleSignInResult == AuthSignInResult.Success) {
+            hasActiveSession = true
+            currentUserProfile = profileAfterGoogleSignIn ?: currentUserProfile
+        }
         return googleSignInResult
     }
 
     override suspend fun signInWithGithub(): AuthSignInResult {
         githubSignInCalls++
+        if (githubSignInResult == AuthSignInResult.Success) {
+            hasActiveSession = true
+            currentUserProfile = profileAfterGithubSignIn ?: currentUserProfile
+        }
         return githubSignInResult
     }
 

@@ -1,18 +1,24 @@
 package app.asmaquran.mobile.features.settings
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
+import app.asmaquran.mobile.data.auth.AuthProviderType
 
 @Immutable
 data class SettingsAccountUiModel(
     val isSignedIn: Boolean = false,
     val displayName: String? = null,
-    val email: String? = null
+    val email: String? = null,
+    val provider: AuthProviderType? = null
 )
 
 @Immutable
 data class SettingsUiState(
     val isLoading: Boolean = true,
     val account: SettingsAccountUiModel = SettingsAccountUiModel(),
+    val showSignInDialog: Boolean = false,
+    val loadingProvider: AuthProviderType? = null,
+    @param:StringRes val authErrorMessageRes: Int? = null,
     val notificationsEnabled: Boolean = true,
     val reminderHour: Int = 9,
     val reminderMinute: Int = 0,
@@ -25,9 +31,14 @@ data class SettingsUiState(
 ) {
     val reminderTimeText: String
         get() = String.format("%02d:%02d", reminderHour, reminderMinute)
+
+    val isAuthLoading: Boolean
+        get() = loadingProvider != null
 }
 
 sealed interface SettingsIntent {
+    data object SignInClicked : SettingsIntent
+    data object SignInDialogDismissed : SettingsIntent
     data object PrivacyPolicyClicked : SettingsIntent
     data object PrivacyPolicyDismissed : SettingsIntent
     data object AboutAppClicked : SettingsIntent
