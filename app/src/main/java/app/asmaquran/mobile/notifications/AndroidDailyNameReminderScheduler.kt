@@ -4,34 +4,68 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import app.asmaquran.mobile.data.preferences.AppPreferences
 import java.util.Calendar
+import kotlinx.coroutines.flow.first
 
 class AndroidDailyNameReminderScheduler(
     private val context: Context
 ) : DailyNameReminderScheduler {
 
-    override fun scheduleDailyReminder() {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            DailyNameNotificationReceiver.REQUEST_CODE,
-            Intent(context, DailyNameNotificationReceiver::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    override suspend fun syncDailyReminder() {
+        val appPreferences = AppPreferences(context)
+        val isEnabled = appPreferences.dailyReminderEnabled.first()
+        val hour = appPreferences.dailyReminderHour.first()
+        val minute = appPreferences.dailyReminderMinute.first()
+
+        if (!isEnabled) {
+            cancelDailyReminder()
+            return
+        }
+
+        scheduleDailyReminder(
+            hour = hour,
+            minute = minute
         )
+    }
+
+    private fun scheduleDailyReminder(
+        hour: Int,
+        minute: Int
+    ) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = reminderPendingIntent()
 
         alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,
-            nextTriggerTimeMillis(),
+            nextTriggerTimeMillis(hour = hour, minute = minute),
             AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
     }
 
-    private fun nextTriggerTimeMillis(): Long {
+    private fun cancelDailyReminder() {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(reminderPendingIntent())
+    }
+
+    private fun reminderPendingIntent(): PendingIntent {
+        return PendingIntent.getBroadcast(
+            context,
+            DailyNameNotificationReceiver.REQUEST_CODE,
+            Intent(context, DailyNameNotificationReceiver::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private fun nextTriggerTimeMillis(
+        hour: Int,
+        minute: Int
+    ): Long {
         val now = Calendar.getInstance()
         val next = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 9)
-            set(Calendar.MINUTE, 0)
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }

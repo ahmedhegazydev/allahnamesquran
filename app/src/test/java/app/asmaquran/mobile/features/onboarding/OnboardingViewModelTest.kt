@@ -1,6 +1,7 @@
 package app.asmaquran.mobile.features.onboarding
 
 import app.asmaquran.mobile.testutil.FakeQuranRepository
+import app.asmaquran.mobile.testutil.FakeAuthRepository
 import app.asmaquran.mobile.testutil.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -21,7 +22,8 @@ class OnboardingViewModelTest {
     @Test
     fun `onStartClicked marks onboarding as seen and emits navigation`() = runTest {
         val repository = FakeQuranRepository()
-        val viewModel = OnboardingViewModel(repository)
+        val authRepository = FakeAuthRepository()
+        val viewModel = OnboardingViewModel(repository, authRepository)
         val navigation = async { viewModel.navigationEvents.first() }
 
         viewModel.onStartClicked()
@@ -29,6 +31,21 @@ class OnboardingViewModelTest {
 
         assertEquals(1, repository.setOnboardingSeenCalls)
         assertTrue(repository.onboardingSeen)
-        assertEquals(Unit, navigation.await())
+        assertEquals(OnboardingNavigationEvent.SignIn, navigation.await())
+    }
+
+    @Test
+    fun `onStartClicked navigates home when auth is already completed`() = runTest {
+        val repository = FakeQuranRepository()
+        val authRepository = FakeAuthRepository().apply {
+            authPromptCompleted = true
+        }
+        val viewModel = OnboardingViewModel(repository, authRepository)
+        val navigation = async { viewModel.navigationEvents.first() }
+
+        viewModel.onStartClicked()
+        advanceUntilIdle()
+
+        assertEquals(OnboardingNavigationEvent.Home, navigation.await())
     }
 }

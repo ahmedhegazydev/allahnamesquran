@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalContext
 import app.asmaquran.mobile.core.ui.theme.SurfaceWhite
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewDetailsUiState
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
 import app.asmaquran.mobile.core.ui.theme.QuranFontFamily
@@ -136,7 +136,7 @@ private fun DetailsScreenContent(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@AppScreenPreviews
 @Composable
 private fun DetailsScreenPreview() {
     PreviewSurface {

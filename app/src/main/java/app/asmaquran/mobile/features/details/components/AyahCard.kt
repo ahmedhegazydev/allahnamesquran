@@ -20,11 +20,11 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewAyahs
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
 import app.asmaquran.mobile.core.ui.theme.QuranFontFamily
@@ -103,7 +103,7 @@ fun AyahCard(
         }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@AppScreenPreviews
 @Composable
 private fun AyahCardPreview() {
     PreviewSurface {

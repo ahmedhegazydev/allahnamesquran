@@ -29,7 +29,7 @@ class SplashViewModel(
         viewModelScope.launch {
             try {
                 repository.syncQuranIfNeeded()
-                dailyNameReminderScheduler.scheduleDailyReminder()
+                dailyNameReminderScheduler.syncDailyReminder()
                 val onboardingSeen = repository.isOnboardingSeen()
                 val hasActiveSession = authRepository.hasActiveSession()
                 val authPromptCompleted = authRepository.isAuthPromptCompleted()

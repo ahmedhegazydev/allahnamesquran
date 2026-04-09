@@ -5,9 +5,17 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class SignInUiState(
-    val isLoading: Boolean = false,
+    val loadingProvider: SignInProvider? = null,
     @StringRes val errorMessageRes: Int? = null
-)
+) {
+    val isLoading: Boolean
+        get() = loadingProvider != null
+}
+
+enum class SignInProvider {
+    GOOGLE,
+    GITHUB
+}
 
 sealed interface SignInNavigationEvent {
     data object Home : SignInNavigationEvent

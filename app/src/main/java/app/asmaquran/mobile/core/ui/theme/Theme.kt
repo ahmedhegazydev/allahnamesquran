@@ -1,15 +1,10 @@
 package app.asmaquran.mobile.core.ui.theme
 
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import app.asmaquran.mobile.features.settings.SettingsAppearanceOption
 
 private val LightColors = lightColorScheme(
     primary = PrimaryGreen,
@@ -21,12 +16,29 @@ private val LightColors = lightColorScheme(
     onSurface = TextPrimary
 )
 
+private val DarkColors = lightColorScheme(
+    primary = Color(0xFF1C7A61),
+    secondary = Color(0xFFE2C77F),
+    background = Color(0xFF0E1715),
+    surface = Color(0xFF17211F),
+    onPrimary = Color.White,
+    onBackground = Color(0xFFF5F2EB),
+    onSurface = Color(0xFFF5F2EB)
+)
+
 @Composable
 fun AllahNamesQuranTheme(
+    appearanceOption: SettingsAppearanceOption = SettingsAppearanceOption.SYSTEM,
     content: @Composable () -> Unit
 ) {
+    val useDarkTheme = when (appearanceOption) {
+        SettingsAppearanceOption.LIGHT -> false
+        SettingsAppearanceOption.DARK -> true
+        SettingsAppearanceOption.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
+    }
+
     MaterialTheme(
-        colorScheme = LightColors,
+        colorScheme = if (useDarkTheme) DarkColors else LightColors,
         typography = AppTypography,
         content = content
     )

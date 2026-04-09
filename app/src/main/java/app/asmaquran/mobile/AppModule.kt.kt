@@ -5,6 +5,7 @@ import app.asmaquran.mobile.data.auth.AuthRepository
 import app.asmaquran.mobile.data.auth.SupabaseAuthManager
 import app.asmaquran.mobile.data.local.AppDatabase
 import app.asmaquran.mobile.data.preferences.AppPreferences
+import app.asmaquran.mobile.data.preferences.SettingsPreferencesStore
 import app.asmaquran.mobile.data.remote.NetworkModule
 import app.asmaquran.mobile.data.remote.supabase.SupabaseProvider
 import app.asmaquran.mobile.data.repository.QuranRepository
@@ -12,6 +13,7 @@ import app.asmaquran.mobile.data.repository.QuranRepositoryImpl
 import app.asmaquran.mobile.features.details.DetailsViewModel
 import app.asmaquran.mobile.features.home.HomeViewModel
 import app.asmaquran.mobile.features.onboarding.OnboardingViewModel
+import app.asmaquran.mobile.features.settings.SettingsViewModel
 import app.asmaquran.mobile.features.signin.SignInViewModel
 import app.asmaquran.mobile.features.splash.SplashViewModel
 import app.asmaquran.mobile.notifications.AndroidDailyNameReminderScheduler
@@ -35,6 +37,7 @@ val appModule = module {
     single { get<AppDatabase>().ayahDao() }
 
     single { AppPreferences(androidContext()) }
+    single<SettingsPreferencesStore> { get<AppPreferences>() }
     single { SupabaseProvider() }
     single<AuthRepository> {
         SupabaseAuthManager(
@@ -60,4 +63,5 @@ val appModule = module {
     viewModelOf(::SignInViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::DetailsViewModel)
+    viewModelOf(::SettingsViewModel)
 }

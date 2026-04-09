@@ -3,6 +3,8 @@ package app.asmaquran.mobile.testutil
 import app.asmaquran.mobile.data.model.AllahName
 import app.asmaquran.mobile.data.model.AyahSearchResult
 import app.asmaquran.mobile.data.repository.QuranRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeQuranRepository : QuranRepository {
 
@@ -14,6 +16,7 @@ class FakeQuranRepository : QuranRepository {
     var getFavoriteNameIdsCalls = 0
     val favoriteUpdates = mutableListOf<Pair<Int, Boolean>>()
     val searchQueries = mutableListOf<String>()
+    private val favoriteIdsFlow = MutableStateFlow<Set<Int>>(emptySet())
 
     var names: List<AllahName> = emptyList()
     var favoriteIds: MutableSet<Int> = mutableSetOf()
@@ -40,8 +43,11 @@ class FakeQuranRepository : QuranRepository {
         return names.firstOrNull { it.id == id }
     }
 
+    override fun observeFavoriteNameIds(): Flow<Set<Int>> = favoriteIdsFlow
+
     override suspend fun getFavoriteNameIds(): Set<Int> {
         getFavoriteNameIdsCalls++
+        favoriteIdsFlow.value = favoriteIds.toSet()
         return favoriteIds.toSet()
     }
 
@@ -52,10 +58,16 @@ class FakeQuranRepository : QuranRepository {
         } else {
             favoriteIds -= id
         }
+        favoriteIdsFlow.value = favoriteIds.toSet()
     }
 
     override suspend fun searchAyahsByAllahName(name: String): List<AyahSearchResult> {
         searchQueries += name
         return ayahsByName[name].orEmpty()
+    }
+
+    fun emitFavoriteIds(ids: Set<Int>) {
+        favoriteIds = ids.toMutableSet()
+        favoriteIdsFlow.value = ids
     }
 }

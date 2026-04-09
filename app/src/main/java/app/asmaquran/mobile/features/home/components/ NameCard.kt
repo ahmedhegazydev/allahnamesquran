@@ -26,10 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewNameItems
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
 import app.asmaquran.mobile.core.ui.theme.GoldAccent
@@ -119,7 +119,7 @@ fun NameCard(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@AppScreenPreviews
 @Composable
 private fun NameCardPreview() {
     PreviewSurface {
@@ -131,7 +131,7 @@ private fun NameCardPreview() {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@AppScreenPreviews
 @Composable
 private fun NameCardUnfavoritePreview() {
     PreviewSurface {

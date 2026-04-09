@@ -101,4 +101,21 @@ class HomeViewModelTest {
 
         assertEquals(initialCalls, repository.getAllAllahNamesCalls)
     }
+
+    @Test
+    fun `external favorite changes refresh visible favorites and empty state`() = runTest {
+        viewModel.onIntent(HomeIntent.LoadData)
+        advanceUntilIdle()
+
+        viewModel.onIntent(HomeIntent.TabSelected(HomeTab.FAVORITES))
+        assertEquals(listOf(alAleem.id), viewModel.state.value.visibleNames.map { it.id })
+
+        repository.emitFavoriteIds(emptySet())
+        advanceUntilIdle()
+
+        val state = viewModel.state.value
+        assertTrue(state.visibleNames.isEmpty())
+        assertTrue(state.isEmpty)
+        assertFalse(state.names.first { it.id == alAleem.id }.isFavorite)
+    }
 }

@@ -25,12 +25,19 @@ class SignInViewModel(
         if (state.value.isLoading) return
 
         viewModelScope.launch {
-            state.value = state.value.copy(isLoading = true, errorMessageRes = null)
+            state.value = state.value.copy(
+                loadingProvider = SignInProvider.GOOGLE,
+                errorMessageRes = null
+            )
 
             when (authRepository.signInWithGoogle(activity)) {
                 AuthSignInResult.Success -> {
                     state.value = SignInUiState()
                     _navigationEvents.emit(SignInNavigationEvent.Home)
+                }
+
+                AuthSignInResult.Started -> {
+                    state.value = SignInUiState()
                 }
 
                 AuthSignInResult.Cancelled -> {
@@ -52,12 +59,61 @@ class SignInViewModel(
         }
     }
 
+    fun signInWithGithub() {
+        if (state.value.isLoading) return
+
+        viewModelScope.launch {
+            state.value = state.value.copy(
+                loadingProvider = SignInProvider.GITHUB,
+                errorMessageRes = null
+            )
+
+            when (authRepository.signInWithGithub()) {
+                AuthSignInResult.Success -> {
+                    state.value = SignInUiState()
+                    _navigationEvents.emit(SignInNavigationEvent.Home)
+                }
+
+                AuthSignInResult.Started -> {
+                    state.value = SignInUiState()
+                }
+
+                AuthSignInResult.Cancelled -> {
+                    state.value = SignInUiState(errorMessageRes = R.string.sign_in_error_cancelled)
+                }
+
+                AuthSignInResult.NotConfigured -> {
+                    state.value = SignInUiState(errorMessageRes = R.string.sign_in_error_not_configured)
+                }
+
+                AuthSignInResult.NoToken -> {
+                    state.value = SignInUiState(errorMessageRes = R.string.sign_in_error_generic)
+                }
+
+                is AuthSignInResult.Failure -> {
+                    state.value = SignInUiState(errorMessageRes = R.string.sign_in_error_generic)
+                }
+            }
+        }
+    }
+
     fun skipForNow() {
         if (state.value.isLoading) return
 
         viewModelScope.launch {
             authRepository.markAuthPromptCompleted()
             _navigationEvents.emit(SignInNavigationEvent.Home)
+        }
+    }
+
+    fun checkActiveSession() {
+        if (state.value.isLoading) return
+
+        viewModelScope.launch {
+            if (authRepository.hasActiveSession()) {
+                authRepository.markAuthPromptCompleted()
+                _navigationEvents.emit(SignInNavigationEvent.Home)
+            }
         }
     }
 }

@@ -12,9 +12,12 @@ import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.Github
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.IDToken
 import java.util.UUID
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 
 class SupabaseAuthManager(
     private val supabaseProvider: SupabaseProvider,
@@ -23,6 +26,19 @@ class SupabaseAuthManager(
 
     override suspend fun hasActiveSession(): Boolean {
         return supabaseProvider.client?.auth?.currentSessionOrNull() != null
+    }
+
+    override suspend fun getCurrentUserProfile(): AuthUserProfile? {
+        val user = supabaseProvider.client?.auth?.currentUserOrNull() ?: return null
+        val metadata = user.userMetadata
+        val displayName = metadata?.get("full_name")?.jsonPrimitive?.contentOrNull
+            ?: metadata?.get("name")?.jsonPrimitive?.contentOrNull
+            ?: user.email?.substringBefore('@')
+
+        return AuthUserProfile(
+            displayName = displayName,
+            email = user.email
+        )
     }
 
     override suspend fun isAuthPromptCompleted(): Boolean {
@@ -79,5 +95,21 @@ class SupabaseAuthManager(
         } catch (throwable: Throwable) {
             AuthSignInResult.Failure(throwable)
         }
+    }
+
+    override suspend fun signInWithGithub(): AuthSignInResult {
+        val client = supabaseProvider.client ?: return AuthSignInResult.NotConfigured
+
+        return try {
+            client.auth.signInWith(Github)
+            AuthSignInResult.Started
+        } catch (throwable: Throwable) {
+            AuthSignInResult.Failure(throwable)
+        }
+    }
+
+    override suspend fun signOut() {
+        val client = supabaseProvider.client ?: return
+        client.auth.signOut()
     }
 }

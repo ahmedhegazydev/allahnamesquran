@@ -3,21 +3,24 @@ package app.asmaquran.mobile.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import app.asmaquran.mobile.data.auth.AuthUserProfile
 import app.asmaquran.mobile.data.auth.AuthRepository
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.theme.AllahNamesQuranTheme
 import app.asmaquran.mobile.data.model.AllahName
 import app.asmaquran.mobile.data.model.AyahSearchResult
+import app.asmaquran.mobile.data.preferences.SettingsPreferencesStore
 import app.asmaquran.mobile.features.details.DetailsScreen
 import app.asmaquran.mobile.features.home.HomeScreen
 import app.asmaquran.mobile.features.onboarding.OnboardingScreen
 import app.asmaquran.mobile.features.onboarding.OnboardingViewModel
+import app.asmaquran.mobile.features.settings.SettingsScreen
 import app.asmaquran.mobile.features.signin.SignInScreen
 import app.asmaquran.mobile.features.signin.SignInViewModel
 import app.asmaquran.mobile.features.splash.SplashScreen
@@ -69,9 +72,17 @@ fun AppNavHost(
             val viewModel: OnboardingViewModel = koinViewModel()
 
             LaunchedEffect(viewModel) {
-                viewModel.navigationEvents.collect {
-                    navController.navigate(AppRoute.SignIn.route) {
-                        popUpTo(AppRoute.Onboarding.route) { inclusive = true }
+                viewModel.navigationEvents.collect { event ->
+                    when (event) {
+                        app.asmaquran.mobile.features.onboarding.OnboardingNavigationEvent.SignIn -> {
+                            navController.navigate(AppRoute.SignIn.route) {
+                                popUpTo(AppRoute.Onboarding.route) { inclusive = true }
+                            }
+                        }
+
+                        app.asmaquran.mobile.features.onboarding.OnboardingNavigationEvent.Home -> {
+                            navigateToHomeFromAuth(navController)
+                        }
                     }
                 }
             }
@@ -96,6 +107,30 @@ fun AppNavHost(
                 initialNameId = dailyNameIdFromNotification,
                 onNameClick = { nameId ->
                     navController.navigate(AppRoute.Details.create(nameId))
+                },
+                onSettingsClick = {
+                    navController.navigate(AppRoute.Settings.route)
+                }
+            )
+        }
+
+        composable(AppRoute.Settings.route) {
+            SettingsScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onSignInClick = {
+                    navController.navigate(AppRoute.SignIn.route)
+                },
+                onReplayOnboarding = {
+                    navController.navigate(AppRoute.Onboarding.route) {
+                        popUpTo(AppRoute.Settings.route) { inclusive = true }
+                    }
+                },
+                onResetApp = {
+                    navController.navigate(AppRoute.Onboarding.route) {
+                        popUpTo(AppRoute.Home.route) { inclusive = true }
+                    }
                 }
             )
         }
@@ -118,7 +153,7 @@ fun AppNavHost(
     }
 }
 
-@Preview(showBackground = true)
+@AppScreenPreviews
 @Composable
 fun AppNavHostPreview() {
     KoinApplication(configuration = koinConfiguration(declaration = {
@@ -126,10 +161,14 @@ fun AppNavHostPreview() {
             single<AuthRepository> {
                 object : AuthRepository {
                     override suspend fun hasActiveSession(): Boolean = false
+                    override suspend fun getCurrentUserProfile(): AuthUserProfile? = null
                     override suspend fun isAuthPromptCompleted(): Boolean = false
                     override suspend fun markAuthPromptCompleted() = Unit
                     override suspend fun signInWithGoogle(activity: android.app.Activity) =
                         app.asmaquran.mobile.data.auth.AuthSignInResult.NotConfigured
+                    override suspend fun signInWithGithub() =
+                        app.asmaquran.mobile.data.auth.AuthSignInResult.NotConfigured
+                    override suspend fun signOut() = Unit
                 }
             }
             single<QuranRepository> {
@@ -139,6 +178,8 @@ fun AppNavHostPreview() {
                     override suspend fun setOnboardingSeen() {}
                     override fun getAllAllahNames(): List<AllahName> = emptyList()
                     override fun getAllahNameById(id: Int): AllahName? = null
+                    override fun observeFavoriteNameIds() =
+                        kotlinx.coroutines.flow.flowOf(emptySet<Int>())
                     override suspend fun getFavoriteNameIds(): Set<Int> {
                         return emptySet()
                     }
@@ -153,14 +194,30 @@ fun AppNavHostPreview() {
                         emptyList()
                 }
             }
+            single<SettingsPreferencesStore> {
+                object : SettingsPreferencesStore {
+                    override val dailyReminderEnabled = kotlinx.coroutines.flow.flowOf(true)
+                    override val dailyReminderHour = kotlinx.coroutines.flow.flowOf(9)
+                    override val dailyReminderMinute = kotlinx.coroutines.flow.flowOf(0)
+                    override val selectedLanguageTag = kotlinx.coroutines.flow.flowOf("ar")
+                    override val selectedAppearanceMode = kotlinx.coroutines.flow.flowOf("system")
+                    override suspend fun setDailyReminderEnabled(value: Boolean) = Unit
+                    override suspend fun setDailyReminderTime(hour: Int, minute: Int) = Unit
+                    override suspend fun setSelectedLanguageTag(value: String) = Unit
+                    override suspend fun setSelectedAppearanceMode(value: String) = Unit
+                    override suspend fun clearFavoriteNameIds() = Unit
+                    override suspend fun resetAll() = Unit
+                }
+            }
             single<DailyNameReminderScheduler> {
                 object : DailyNameReminderScheduler {
-                    override fun scheduleDailyReminder() = Unit
+                    override suspend fun syncDailyReminder() = Unit
                 }
             }
             factory { SplashViewModel(get(), get(), get()) }
-            factory { OnboardingViewModel(get()) }
+            factory { OnboardingViewModel(get(), get()) }
             factory { SignInViewModel(get()) }
+            factory { app.asmaquran.mobile.features.settings.SettingsViewModel(get(), get(), get()) }
         })
     }), content = {
         AllahNamesQuranTheme {

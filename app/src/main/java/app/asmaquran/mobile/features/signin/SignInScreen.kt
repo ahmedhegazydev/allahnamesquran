@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Login
+import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,6 +32,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -46,11 +48,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
 import app.asmaquran.mobile.core.ui.theme.GoldAccent
 import app.asmaquran.mobile.core.ui.theme.PrimaryGreen
@@ -66,6 +71,7 @@ fun SignInScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val activity = context.findActivity()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(viewModel) {
         viewModel.navigationEvents.collectLatest { event ->
@@ -75,11 +81,28 @@ fun SignInScreen(
         }
     }
 
+    LaunchedEffect(viewModel) {
+        viewModel.checkActiveSession()
+    }
+
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.checkActiveSession()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     SignInScreenContent(
         state = state,
         onGoogleClick = {
             activity?.let(viewModel::signInWithGoogle)
         },
+        onGithubClick = viewModel::signInWithGithub,
         onSkipClick = viewModel::skipForNow
     )
 }
@@ -88,6 +111,7 @@ fun SignInScreen(
 private fun SignInScreenContent(
     state: SignInUiState,
     onGoogleClick: () -> Unit,
+    onGithubClick: () -> Unit,
     onSkipClick: () -> Unit
 ) {
     Box(
@@ -200,6 +224,42 @@ private fun SignInScreenContent(
                                 fontSize = 20.sp
                             )
                             GoogleMark(modifier = Modifier.size(22.dp))
+                        }
+                    }
+                }
+
+                Button(
+                    onClick = onGithubClick,
+                    enabled = !state.isLoading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(72.dp),
+                    shape = RoundedCornerShape(22.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF111827),
+                        contentColor = Color.White
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp)
+                ) {
+                    if (state.loadingProvider == SignInProvider.GITHUB) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(22.dp),
+                            strokeWidth = 2.5.dp,
+                            color = Color.White
+                        )
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.sign_in_github_cta),
+                                color = Color.White,
+                                fontFamily = QuranFontFamily,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 20.sp
+                            )
+                            GithubMark()
                         }
                     }
                 }
@@ -389,14 +449,33 @@ private fun Context.findActivity(): Activity? {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@AppScreenPreviews
 @Composable
 private fun SignInScreenPreview() {
     PreviewSurface {
         SignInScreenContent(
             state = SignInUiState(),
             onGoogleClick = {},
+            onGithubClick = {},
             onSkipClick = {}
         )
+    }
+}
+
+@Composable
+private fun GithubMark() {
+    Surface(
+        modifier = Modifier.size(24.dp),
+        shape = CircleShape,
+        color = Color.White.copy(alpha = 0.12f)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = Icons.Rounded.Code,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }

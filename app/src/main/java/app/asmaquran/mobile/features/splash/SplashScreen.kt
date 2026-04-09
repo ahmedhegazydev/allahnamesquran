@@ -1,6 +1,7 @@
 package app.asmaquran.mobile.features.splash
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.MenuBook
-import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,13 +25,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
-import app.asmaquran.mobile.core.ui.theme.PrimaryGreen
 import app.asmaquran.mobile.core.ui.theme.QuranFontFamily
 import org.koin.androidx.compose.koinViewModel
 
@@ -74,40 +74,23 @@ private fun SplashScreenContent() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(106.dp)
-                    .clip(RoundedCornerShape(30.dp))
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                PrimaryGreen,
-                                PrimaryGreen.copy(alpha = 0.9f)
-                            )
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.MenuBook,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(46.dp)
-                )
-            }
+            SplashHeroIcon()
             Text(
-                text = stringResource(R.string.app_name),
+                text = stringResource(R.string.splash_title),
                 color = Color.White,
-                fontSize = 34.sp,
+                fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = QuranFontFamily
+                fontFamily = QuranFontFamily,
+                textAlign = TextAlign.Center
+
             )
             Text(
-                text = stringResource(R.string.app_name),
-                color = Color.White,
-                fontSize = 34.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = QuranFontFamily
+                text = stringResource(R.string.splash_description),
+                color = Color.White.copy(alpha = 0.8f),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = QuranFontFamily,
+                textAlign = TextAlign.Center
             )
 
             CircularProgressIndicator(
@@ -118,7 +101,37 @@ private fun SplashScreenContent() {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF2F6D58, heightDp = 640)
+@Composable
+private fun SplashHeroIcon() {
+    Box(
+        modifier = Modifier
+            .size(112.dp)
+            .clip(RoundedCornerShape(30.dp))
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = 0.18f),
+                        Color.White.copy(alpha = 0.12f)
+                    )
+                )
+            )
+            .border(
+                width = 1.dp,
+                color = Color.White.copy(alpha = 0.14f),
+                shape = RoundedCornerShape(30.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Rounded.MenuBook,
+            contentDescription = null,
+            tint = Color.White,
+            modifier = Modifier.size(44.dp)
+        )
+    }
+}
+
+@AppScreenPreviews
 @Composable
 private fun SplashScreenPreview() {
     PreviewSurface {

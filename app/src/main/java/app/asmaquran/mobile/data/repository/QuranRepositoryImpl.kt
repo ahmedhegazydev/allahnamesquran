@@ -8,6 +8,7 @@ import app.asmaquran.mobile.data.model.AyahSearchResult
 import app.asmaquran.mobile.data.preferences.AppPreferences
 import app.asmaquran.mobile.data.remote.QuranApiService
 import app.asmaquran.mobile.data.static.AllahNamesDataSource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 class QuranRepositoryImpl(
@@ -46,6 +47,10 @@ class QuranRepositoryImpl(
 
     override fun getAllahNameById(id: Int): AllahName? {
         return AllahNamesDataSource.allNames.firstOrNull { it.id == id }
+    }
+
+    override fun observeFavoriteNameIds(): Flow<Set<Int>> {
+        return appPreferences.favoriteNameIds
     }
 
     override suspend fun getFavoriteNameIds(): Set<Int> {

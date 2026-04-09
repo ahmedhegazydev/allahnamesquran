@@ -13,10 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.asmaquran.mobile.R
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
 import app.asmaquran.mobile.core.ui.theme.QuranFontFamily
 
@@ -53,7 +53,7 @@ fun EmptyNamesState(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED)
+@AppScreenPreviews
 @Composable
 private fun EmptyNamesStatePreview() {
     PreviewSurface {

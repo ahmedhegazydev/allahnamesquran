@@ -25,7 +25,7 @@ class SignInViewModelTest {
     @Test
     fun `signInWithGoogle emits home on success and clears loading state`() = runTest {
         val authRepository = FakeAuthRepository().apply {
-            signInResult = AuthSignInResult.Success
+            googleSignInResult = AuthSignInResult.Success
         }
         val viewModel = SignInViewModel(authRepository)
         val activity = mock(Activity::class.java)
@@ -36,7 +36,7 @@ class SignInViewModelTest {
 
         assertEquals(SignInUiState(), viewModel.state.value)
         assertEquals(SignInNavigationEvent.Home, navigation.await())
-        assertEquals(1, authRepository.signInCalls)
+        assertEquals(1, authRepository.googleSignInCalls)
         assertSame(activity, authRepository.lastActivity)
     }
 
@@ -85,12 +85,58 @@ class SignInViewModelTest {
         assertEquals(SignInNavigationEvent.Home, navigation.await())
     }
 
+    @Test
+    fun `signInWithGithub clears loading state when browser flow starts`() = runTest {
+        val authRepository = FakeAuthRepository().apply {
+            githubSignInResult = AuthSignInResult.Started
+        }
+        val viewModel = SignInViewModel(authRepository)
+
+        viewModel.signInWithGithub()
+        advanceUntilIdle()
+
+        assertEquals(SignInUiState(), viewModel.state.value)
+        assertEquals(1, authRepository.githubSignInCalls)
+    }
+
+    @Test
+    fun `signInWithGithub maps not configured result to config error`() = runTest {
+        val authRepository = FakeAuthRepository().apply {
+            githubSignInResult = AuthSignInResult.NotConfigured
+        }
+        val viewModel = SignInViewModel(authRepository)
+
+        viewModel.signInWithGithub()
+        advanceUntilIdle()
+
+        assertEquals(
+            SignInUiState(errorMessageRes = R.string.sign_in_error_not_configured),
+            viewModel.state.value
+        )
+        assertEquals(1, authRepository.githubSignInCalls)
+    }
+
+    @Test
+    fun `checkActiveSession emits home when session already exists`() = runTest {
+        val authRepository = FakeAuthRepository().apply {
+            hasActiveSession = true
+        }
+        val viewModel = SignInViewModel(authRepository)
+        val navigation = async { viewModel.navigationEvents.first() }
+
+        viewModel.checkActiveSession()
+        advanceUntilIdle()
+
+        assertEquals(SignInNavigationEvent.Home, navigation.await())
+        assertEquals(1, authRepository.markAuthPromptCompletedCalls)
+    }
+
     private fun assertFailureState(
         result: AuthSignInResult,
         expectedErrorRes: Int
     ) = runTest {
         val authRepository = FakeAuthRepository().apply {
-            signInResult = result
+            googleSignInResult = result
         }
         val viewModel = SignInViewModel(authRepository)
         val activity = mock(Activity::class.java)
@@ -99,6 +145,6 @@ class SignInViewModelTest {
         advanceUntilIdle()
 
         assertEquals(SignInUiState(errorMessageRes = expectedErrorRes), viewModel.state.value)
-        assertEquals(1, authRepository.signInCalls)
+        assertEquals(1, authRepository.googleSignInCalls)
     }
 }

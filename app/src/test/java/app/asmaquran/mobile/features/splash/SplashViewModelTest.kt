@@ -41,7 +41,7 @@ class SplashViewModelTest {
         assertEquals(SplashDestination.ONBOARDING, viewModel.state.value.destination)
         assertFalse(viewModel.state.value.isLoading)
         assertEquals(1, repository.syncCalls)
-        assertEquals(1, scheduler.scheduleCalls)
+        assertEquals(1, scheduler.syncCalls)
     }
 
     @Test

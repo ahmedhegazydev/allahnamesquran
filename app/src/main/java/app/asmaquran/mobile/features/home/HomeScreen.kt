@@ -31,7 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
@@ -39,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import app.asmaquran.mobile.core.ui.components.AsmaTabRow
+import app.asmaquran.mobile.core.ui.preview.AppScreenPreviews
 import app.asmaquran.mobile.core.ui.preview.PreviewFavoriteHomeUiState
 import app.asmaquran.mobile.core.ui.preview.PreviewHomeUiState
 import app.asmaquran.mobile.core.ui.preview.PreviewSurface
@@ -51,7 +51,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     initialNameId: Int? = null,
-    onNameClick: (Int) -> Unit
+    onNameClick: (Int) -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     val viewModel: HomeViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -87,7 +88,8 @@ fun HomeScreen(
         onDailyNameClick = onNameClick,
         onSearchChanged = { viewModel.onIntent(HomeIntent.SearchChanged(it)) },
         onTabSelected = { viewModel.onIntent(HomeIntent.TabSelected(it)) },
-        onFavoriteClick = { viewModel.onIntent(HomeIntent.FavoriteClicked(it)) }
+        onFavoriteClick = { viewModel.onIntent(HomeIntent.FavoriteClicked(it)) },
+        onSettingsClick = onSettingsClick
     )
 }
 
@@ -99,7 +101,8 @@ private fun HomeScreenContent(
     onDailyNameClick: (Int) -> Unit,
     onSearchChanged: (String) -> Unit,
     onTabSelected: (HomeTab) -> Unit,
-    onFavoriteClick: (Int) -> Unit
+    onFavoriteClick: (Int) -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -116,7 +119,8 @@ private fun HomeScreenContent(
             state = state,
             onSearchChanged = onSearchChanged,
             onTabSelected = onTabSelected,
-            onDailyNameClick = onDailyNameClick
+            onDailyNameClick = onDailyNameClick,
+            onSettingsClick = onSettingsClick
         )
 
         if (state.isLoading) {
@@ -165,7 +169,8 @@ private fun LazyGridScope.homeTopSection(
     state: HomeUiState,
     onSearchChanged: (String) -> Unit,
     onTabSelected: (HomeTab) -> Unit,
-    onDailyNameClick: (Int) -> Unit
+    onDailyNameClick: (Int) -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     item(span = { GridItemSpan(maxLineSpan) }) {
         HomeHeader(
@@ -173,7 +178,8 @@ private fun LazyGridScope.homeTopSection(
             selectedTab = state.selectedTab,
             allCount = if (state.isLoading) 0 else state.names.size,
             favoriteCount = state.names.count { it.isFavorite },
-            onSearchChanged = onSearchChanged
+            onSearchChanged = onSearchChanged,
+            onSettingsClick = onSettingsClick
         )
     }
 
@@ -250,7 +256,7 @@ private fun HomeNameCardSkeleton(shimmerAlpha: Float) {
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@AppScreenPreviews
 @Composable
 private fun HomeScreenPreview() {
     PreviewSurface {
@@ -261,12 +267,13 @@ private fun HomeScreenPreview() {
             onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            onSettingsClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@AppScreenPreviews
 @Composable
 private fun HomeScreenFavoritesPreview() {
     PreviewSurface {
@@ -277,12 +284,13 @@ private fun HomeScreenFavoritesPreview() {
             onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            onSettingsClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@AppScreenPreviews
 @Composable
 private fun HomeScreenLoadingPreview() {
     PreviewSurface {
@@ -293,12 +301,13 @@ private fun HomeScreenLoadingPreview() {
             onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            onSettingsClick = {}
         )
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F3ED, heightDp = 860)
+@AppScreenPreviews
 @Composable
 private fun HomeScreenEmptyPreview() {
     PreviewSurface {
@@ -309,7 +318,8 @@ private fun HomeScreenEmptyPreview() {
             onDailyNameClick = {},
             onSearchChanged = {},
             onTabSelected = {},
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            onSettingsClick = {}
         )
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import app.asmaquran.mobile.data.repository.QuranRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -55,6 +56,8 @@ class HomeViewModel(
                     isLoading = false
                 )
             }
+
+            observeFavoriteIds()
         }
     }
 
@@ -126,5 +129,25 @@ class HomeViewModel(
             name = dailyName,
             ayah = firstAyah
         )
+    }
+
+    private fun observeFavoriteIds() {
+        viewModelScope.launch {
+            repository.observeFavoriteNameIds().collectLatest { favoriteIds ->
+                state.update { current ->
+                    if (current.names.isEmpty()) return@update current
+
+                    val updatedNames = current.names.map { item ->
+                        item.copy(isFavorite = item.id in favoriteIds)
+                    }
+                    val visible = filterNames(updatedNames, current.selectedTab, current.searchQuery)
+                    current.copy(
+                        names = updatedNames,
+                        visibleNames = visible,
+                        isEmpty = visible.isEmpty()
+                    )
+                }
+            }
+        }
     }
 }
